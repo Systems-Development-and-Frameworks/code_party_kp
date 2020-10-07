@@ -1,12 +1,7 @@
 # Systems Development and Frameworks - 2020/21
 
-This is the homework repository of course `Systems Development and Frameworks`
-at `Hochschule für Technik und Wirtschaft` in Berlin.
+This is the homework repository of course `Systems Development and Frameworks` of `Kirill Prakhov und Phuong Pham`
 
-
-<p align="center">
-  <img src="https://media.giphy.com/media/dNgK7Ws7y176U/giphy.gif" alt="homework" width="50%">
-<p>
 
 ## Homework - Exercise #0
 
