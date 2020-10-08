@@ -1,6 +1,6 @@
 # Systems Development and Frameworks - 2020/21
 
-This is the homework repository of course `Systems Development and Frameworks` of `Kirill Prakhov und Phuong Pham`
+This is the homework repository of course `Systems Development and Frameworks` of `Kirill Prakhov und Phuong Pham und Anton Karakochev`
 
 
 ## Homework - Exercise #0
