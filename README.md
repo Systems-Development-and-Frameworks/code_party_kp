@@ -1,7 +1,6 @@
 # Systems Development and Frameworks - 2020/21
 
-This is the homework repository of course `Systems Development and Frameworks`
-at `Hochschule für Technik und Wirtschaft` in Berlin.
+This is the homework repository of course `Systems Development and Frameworks` of `Kirill Prakhov und Phuong Pham und Anton Karakochev`
 
 <p align="center">
   <img src="https://media.giphy.com/media/dNgK7Ws7y176U/giphy.gif" alt="homework" width="50%">
@@ -14,4 +13,5 @@ at `Hochschule für Technik und Wirtschaft` in Berlin.
 3. Replace the content of this `README.md` with your individual content. Here's a Github [README.md template](https://github.com/othneildrew/Best-README-Template) and there are more [awesome READMEs](https://github.com/matiassingers/awesome-readme) out there. :star:
 
 ## Homework - Exercise #1
+
 -- comming soon --
