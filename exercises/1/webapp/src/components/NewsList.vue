@@ -38,7 +38,7 @@ export default {
       this.news = this.news.filter((x) => newItem.id !== x.id);
     },
     create() {
-      var item = { title: this.newTitle, votes: 0, id: Date.now() };
+      const item = { title: this.newTitle, votes: 0, id: Date.now() };
       this.newTitle = "";
       this.news.push(item);
     },
