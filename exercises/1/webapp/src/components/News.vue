@@ -11,8 +11,7 @@ export default {
   props: { news: Object },
   methods: {
     upvote() {
-      this.news.votes += 1;
-      this.$emit("update", this.news);
+      this.$emit("update", { ...this.news, votes: (this.news.votes + 1)});
     },
     downvote() {
       this.news.votes -= 1;
