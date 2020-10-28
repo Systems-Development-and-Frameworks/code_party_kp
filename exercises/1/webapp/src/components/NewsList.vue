@@ -7,7 +7,7 @@
         </li>
       </ul>
     </div>
-    <form @submit.prevent class="form">
+    <form @submit.prevent>
       <input v-model="newTitle" />
       <button @click="create">Create</button>
     </form>
