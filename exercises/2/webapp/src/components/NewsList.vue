@@ -1,5 +1,6 @@
 <template>
   <div class="newslist_container">
+    <h1>empty list</h1>
     <div>
       <ul id="list" placeholder="List is empty.">
         <li v-for="anews in newsSorted" :key="anews.id">
