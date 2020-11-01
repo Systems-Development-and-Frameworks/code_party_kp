@@ -1,7 +1,7 @@
 <template>
   <div class="newslist_container">
     <div>
-      <ul>
+      <ul id="list" placeholder="List is empty.">
         <li v-for="anews in newsSorted" :key="anews.id">
           <News :news="anews" @update="update" @remove="remove" />
         </li>
@@ -50,8 +50,12 @@ export default {
   },
 };
 </script>
+
 <style>
 ul {
   list-style-type: none;
+}
+ul:empty::after {
+  content: attr(placeholder);
 }
 </style>
