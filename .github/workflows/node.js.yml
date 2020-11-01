@@ -1,25 +1,47 @@
 name: Node.js CI
 
 on: [push]
+defaults:
+  run:
+    working-directory: ./exercises/2/webapp/
 
 jobs:
-  build:
+    test:
+      name: test
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [14.x]
 
-    runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+              cd exercises/2/webapp
+              npm install
+              npm run test:unit
+        env:
+          CI: true
+    
+    lint:
+      name: lint
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [14.x]
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: |
-            cd exercises/2/webapp
-            npm install
-            npm run test:unit
-      env:
-        CI: true
+      steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+              cd exercises/2/webapp
+              npm install
+              npm run lint
+        env:
+          CI: true
