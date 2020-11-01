@@ -1,4 +1,4 @@
-name: Node.js CI
+name: ""
 
 on: [push]
 defaults:
@@ -20,7 +20,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-              cd exercises/2/webapp
               npm install
               npm run test:unit
         env:
@@ -40,7 +39,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
-              cd exercises/2/webapp
               npm install
               npm run lint
         env:
