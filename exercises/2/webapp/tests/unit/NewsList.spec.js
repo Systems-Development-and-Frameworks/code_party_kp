@@ -3,12 +3,12 @@ import NewsList from '@/components/NewsList.vue'
 
 describe('NewsList.vue', () => {
     it('render empty state', () => {
-        const news = []
-        const wrapper = shallowMount(NewsList, {
-            propsData: { news: news }
-        })
-        const h1 = wrapper.find("h1")
-        expect(h1.text()).toMatch("empty list")
+       const wrapper = shallowMount(NewsList, {
+           data() {
+               return {news: []}
+           }
+       })
+       expect(wrapper.find('.emptyList').exists()).toBeTruthy();
     })
 
     it('renders <NewsItem> for each item', () => {

@@ -1,12 +1,14 @@
 <template>
   <div class="newslist_container">
-    <h1>empty list</h1>
-    <div>
-      <ul id="list" placeholder="List is empty.">
+      <div>
+      <ul>
         <li v-for="anews in newsSorted" :key="anews.id">
           <News :news="anews" @update="update" @remove="remove" />
         </li>
       </ul>
+      <div v-if="isEmpty" class="emptyList">
+        The list is empty :(
+      </div>
     </div>
     <form @submit.prevent>
       <input v-model="newTitle" />
@@ -48,6 +50,9 @@ export default {
     newsSorted() {
       return [...this.news].sort((a, b) => b.votes - a.votes);
     },
+    isEmpty(){
+      return this.news.length == 0;
+    }
   },
 };
 </script>
