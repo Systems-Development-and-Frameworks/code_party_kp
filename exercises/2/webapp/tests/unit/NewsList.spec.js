@@ -1,22 +1,36 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import NewsList from '@/components/NewsList.vue'
 
-describe('NewsList.vue', () => {
+describe('empty', () => {
     it('render empty state', () => {
-       const wrapper = shallowMount(NewsList, {
-           data() {
-               return {news: []}
-           }
-       })
-       expect(wrapper.find('.emptyList').exists()).toBeTruthy();
+        let slug
+        const wrapper = shallowMount(NewsList, {
+            data() {
+                return { news: [] }
+            }
+        })
+        expect(wrapper.find('.emptyList').exists()).toBeTruthy();
     })
-
-    it('renders <NewsItem> for each item', () => {
-        const news = [{ title: "VueJs", votes: 0, id: 1 }, { title: "just", votes: 0, id: 2 }, { title: "rocks", votes: 0, id: 3 }]
-        const wrapper = mount(NewsList)
-        expect(wrapper.vm.newsSorted).toEqual(news)
-    })
-
-    //TODO: click "Reverse order" toggles between ascending and descending order
-
 })
+
+describe('not empty', () => {
+    it('render <NewsItem> for each item', () => {
+        const wrapper = shallowMount(NewsList, {
+            data() {
+                return { news: [{ title: "Vuejs", votes: 0 }] }
+            }
+        })
+        expect(wrapper.find('.emptyList').exists()).toBeFalsy();
+    })
+    
+    describe('click "Reserve order"', () => {
+        it('toggles between ascending and descending order', () => {
+    
+        })
+    })
+})
+
+
+
+
+
