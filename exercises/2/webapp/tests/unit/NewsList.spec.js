@@ -3,7 +3,6 @@ import NewsList from '@/components/NewsList.vue'
 
 describe('empty', () => {
     it('render empty state', () => {
-        let slug
         const wrapper = shallowMount(NewsList, {
             data() {
                 return { news: [] }
@@ -22,7 +21,7 @@ describe('not empty', () => {
         })
         expect(wrapper.find('.emptyList').exists()).toBeFalsy();
     })
-    
+
     describe('click "Reserve order"', () => {
         it('toggles between ascending and descending order', () => {
     
