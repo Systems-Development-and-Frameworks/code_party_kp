@@ -15,7 +15,7 @@
       <button @click="create">Create</button>
     </form>
     <button @click="reverse" id="reverseButton">
-      Reverse
+      Reverse order
     </button>
   </div>
 </template>
