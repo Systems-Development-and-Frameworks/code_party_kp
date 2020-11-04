@@ -1,6 +1,6 @@
 <template>
   <div class="newslist_container">
-      <div>
+    <div>
       <ul>
         <li v-for="anews in newsSorted" :key="anews.id">
           <News :news="anews" @update="update" @remove="remove" />
@@ -14,6 +14,9 @@
       <input v-model="newTitle" />
       <button @click="create">Create</button>
     </form>
+    <button @click="reverse" id="reverseButton">
+      Reverse
+    </button>
   </div>
 </template>
 
@@ -28,12 +31,16 @@ export default {
         { title: "rocks", votes: 0, id: 3 },
       ],
       newTitle: "",
+      sortOrder: 1,
     };
   },
   components: {
     News,
   },
   methods: {
+    reverse() {
+      this.sortOrder = this.sortOrder * -1;
+    },
     update(newItem) {
       this.news = this.news.map((x) => (x.id == newItem.id ? newItem : x));
     },
@@ -48,11 +55,13 @@ export default {
   },
   computed: {
     newsSorted() {
-      return [...this.news].sort((a, b) => b.votes - a.votes);
+      return [...this.news].sort(
+        (a, b) => this.sortOrder * (b.votes - a.votes)
+      );
     },
-    isEmpty(){
+    isEmpty() {
       return this.news.length == 0;
-    }
+    },
   },
 };
 </script>
@@ -60,8 +69,5 @@ export default {
 <style>
 ul {
   list-style-type: none;
-}
-ul:empty::after {
-  content: attr(placeholder);
 }
 </style>
