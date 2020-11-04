@@ -1,4 +1,4 @@
-import { shallowMount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import NewsList from "@/components/NewsList.vue";
 import News from "@/components/News.vue";
 
@@ -37,28 +37,25 @@ describe("not empty", () => {
     });
 
   describe('click "Reverse order"', () => {
-    it("toggles between ascending and descending order", () => {
+    it("toggles between ascending and descending order", async () => {
       const news = [
         { title: "A", votes: 0, id: 1 },
         { title: "B", votes: 1, id: 2 },
         { title: "C", votes: 2, id: 3 },
       ];
-      const wrapper = shallowMount(NewsList, {
+      const wrapper = mount(NewsList, {
         data() {
           return { news: news };
         },
       });
+      let newsWrapper =  wrapper.findAllComponents(News).wrappers.map((w) => w.find('h2').text());
+      expect(newsWrapper).toEqual(['C(2)', 'B(1)', 'A(0)']);
+
       const input = wrapper.find("#reverseButton");
-      input.trigger("click");
-      expect(wrapper.findAllComponents(News).at(0).vm.$props.news).toBe(
-        news[2]
-      );
-      expect(wrapper.findAllComponents(News).at(2).vm.$props.news).toBe(
-        news[0]
-      );
-      expect(wrapper.findAllComponents(News).at(1).vm.$props.news).toBe(
-        news[1]
-      );
+      await input.trigger("click");
+      
+      newsWrapper =  wrapper.findAllComponents(News).wrappers.map((w) => w.find('h2').text());
+      expect(newsWrapper).toEqual(['A(0)', 'B(1)', 'C(2)']);
     });
   });
 });
