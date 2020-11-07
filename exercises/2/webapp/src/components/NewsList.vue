@@ -10,10 +10,7 @@
         The list is empty :(
       </div>
     </div>
-    <form @submit.prevent>
-      <input v-model="newTitle" />
-      <button @click="create">Create</button>
-    </form>
+    <NewsForm :newTitle="newTitle" @create="create"/>
     <button @click="reverse" id="reverseButton">
       Reverse order
     </button>
@@ -22,6 +19,7 @@
 
 <script>
 import News from "./News";
+import NewsForm from "./NewsForm";
 export default {
   data() {
     return {
@@ -30,12 +28,12 @@ export default {
         { title: "just", votes: 0, id: 2 },
         { title: "rocks", votes: 0, id: 3 },
       ],
-      newTitle: "",
       sortOrder: 1,
     };
   },
   components: {
     News,
+    NewsForm
   },
   methods: {
     reverse() {
@@ -47,10 +45,8 @@ export default {
     remove(newItem) {
       this.news = this.news.filter((x) => newItem.id !== x.id);
     },
-    create() {
-      const item = { title: this.newTitle, votes: 0, id: Date.now() };
-      this.newTitle = "";
-      this.news.push(item);
+    create(newItem) {
+      this.news.push(newItem);
     },
   },
   computed: {
