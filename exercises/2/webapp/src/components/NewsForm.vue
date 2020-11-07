@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <input v-model="newTitle" />
+    <input v-model="newTitle" aria-label="title" />
     <button @click="click" :disabled="!newTitle">Create</button>
   </form>
 </template>
