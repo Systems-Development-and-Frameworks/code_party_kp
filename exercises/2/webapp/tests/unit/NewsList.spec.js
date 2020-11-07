@@ -48,14 +48,18 @@ describe("not empty", () => {
           return { news: news };
         },
       });
-      let newsWrapper =  wrapper.findAllComponents(News).wrappers.map((w) => w.find('h2').text());
-      expect(newsWrapper).toEqual(['C(2)', 'B(1)', 'A(0)']);
+      let newsWrapper = wrapper
+        .findAllComponents(News)
+        .wrappers.map((w) => w.find("h2").text());
+      expect(newsWrapper).toEqual(["C(2)", "B(1)", "A(0)"]);
 
       const input = wrapper.find("#reverseButton");
       await input.trigger("click");
-      
-      newsWrapper =  wrapper.findAllComponents(News).wrappers.map((w) => w.find('h2').text());
-      expect(newsWrapper).toEqual(['A(0)', 'B(1)', 'C(2)']);
+
+      newsWrapper = wrapper
+        .findAllComponents(News)
+        .wrappers.map((w) => w.find("h2").text());
+      expect(newsWrapper).toEqual(["A(0)", "B(1)", "C(2)"]);
     });
   });
 });
