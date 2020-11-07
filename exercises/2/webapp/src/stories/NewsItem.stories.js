@@ -1,14 +1,14 @@
-import News from "../components/News.vue";
+import NewsItem from "../components/NewsItem.vue";
 //import { action, decorate } from '@storybook/addon-actions'
 
 export default {
     title: 'NewsItem',
-    component: News,
+    component: NewsItem,
     argTypes: { onClick: { action: 'update' } },
   };
   
   export const Default = (args, /*{argTypes}*/) => ({
-      components: {News}, 
+      components: {NewsItem}, 
       template: ' <News :news="news" @update="update" @remove="remove" />',
       props: {
         news: {

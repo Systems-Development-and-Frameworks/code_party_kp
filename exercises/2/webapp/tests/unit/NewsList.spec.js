@@ -1,6 +1,6 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import NewsList from "@/components/NewsList.vue";
-import News from "@/components/News.vue";
+import NewsItem from "@/components/NewsItem.vue";
 
 describe("empty", () => {
   it("render empty state", () => {
@@ -25,7 +25,7 @@ describe("not empty", () => {
         };
       },
     });
-    expect(wrapper.findAllComponents(News).length).toBe(2);
+    expect(wrapper.findAllComponents(NewsItem).length).toBe(2);
   }),
     it("not render empty placeholder", () => {
       const wrapper = shallowMount(NewsList, {
@@ -49,7 +49,7 @@ describe("not empty", () => {
         },
       });
       let newsWrapper = wrapper
-        .findAllComponents(News)
+        .findAllComponents(NewsItem)
         .wrappers.map((w) => w.find("h2").text());
       expect(newsWrapper).toEqual(["C(2)", "B(1)", "A(0)"]);
 
@@ -57,7 +57,7 @@ describe("not empty", () => {
       await input.trigger("click");
 
       newsWrapper = wrapper
-        .findAllComponents(News)
+        .findAllComponents(NewsItem)
         .wrappers.map((w) => w.find("h2").text());
       expect(newsWrapper).toEqual(["A(0)", "B(1)", "C(2)"]);
     });
