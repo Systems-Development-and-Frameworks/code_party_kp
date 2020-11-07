@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li v-for="anews in newsSorted" :key="anews.id">
-          <News :news="anews" @update="update" @remove="remove" />
+          <NewsItem :news="anews" @update="update" @remove="remove" />
         </li>
       </ul>
       <div v-if="isEmpty" class="emptyList">
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import News from "./News";
+import NewsItem from "./NewsItem";
 import NewsForm from "./NewsForm";
 export default {
   data() {
@@ -32,7 +32,7 @@ export default {
     };
   },
   components: {
-    News,
+    NewsItem,
     NewsForm
   },
   methods: {
