@@ -1,18 +1,16 @@
 <template>
   <div id="app">
-    <Header />
+    <h1>News List</h1>
     <NewsList />
   </div>
 </template>
 
 <script>
-import Header from "./components/Header";
 import NewsList from "./components/NewsList";
 
 export default {
   name: "App",
   components: {
-    Header,
     NewsList,
   },
 };
