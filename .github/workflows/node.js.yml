@@ -3,7 +3,7 @@ name: "CI"
 on: [push]
 defaults:
   run:
-    working-directory: ./exercises/2/webapp/
+    working-directory: ./webapp/
 
 jobs:
     test:
