@@ -17,6 +17,7 @@ const typeDefs = gql`
     title: String!
     votes: Int!
     author: User!
+    voters: [User]
   }
 
   type User {
@@ -40,11 +41,11 @@ const typeDefs = gql`
 
     # 🚀 OPTIONAL
     # downvote(id: ID!, voter: UserInput!): Post
+
   }
 
   input PostInput {
     title: String!
-
     # ⚠️ FIXME in exercise #4
     # mock author until we have authentication
     author: UserInput!
@@ -53,6 +54,7 @@ const typeDefs = gql`
   input UserInput {
     name: String!
   }
+
 `;
 
 //5. define resolver
@@ -72,6 +74,16 @@ const resolvers = {
       return dataSources.memoryDataSource.getPosts(parent.name);
     },
   },
+  Mutation: {
+    write: (parent, _args, {dataSources}) =>
+    {
+      return dataSources.memoryDataSource.addnewPost( _args.post.title, _args.post.author);
+    },
+    upvote: (parent, _args, {dataSources}) =>
+    {
+      return dataSources.memoryDataSource.upvote(_args.id, _args.voter);
+    }
+  }
 };
 
 //6. create an instance of Apollo Server
@@ -99,26 +111,28 @@ class MemoryDataSource extends DataSource {
     this.usersData = new Set();
     this.postsData = [];
 
-    this.newPost({
-      title: "Pinguine sind keine Vögel",
-      author: { name: "Peter" },
-    });
+    this.addnewPost(
+       "Pinguine sind keine Vögel",
+      { name: "Peter" },);
   }
 
   initialize() {}
 
-  newPost({ title, author }) {
+  addnewPost(_title, _author) {
     let post = {
-      id: "TODO GENERATE",
-      title: title,
+      id: this.postsData.length,
+      title: _title,
       votes: 0 /*TODO or empty set */,
-      author: author,
+      author: _author,
+      voters : [{name: "a"}]
     };
+    
     //it's a set, doesn't matter if exists or not
-    this.usersData.add(author);
+    this.usersData.add(_author);
 
     //posts can have duplicate content, as long as id's are different, so no checks needed
     this.postsData.push(post);
+    return post;
   }
 
   async posts() {
@@ -131,4 +145,38 @@ class MemoryDataSource extends DataSource {
   async users() {
     return this.usersData;
   }
+  async upvote(id, voter) {
+    let postIndex = this.postsData.findIndex((x) => x.id == id);
+    if(postIndex != -1)
+    {
+      if(this.postsData[postIndex].voters == null)
+      {
+        this.postsData[postIndex].voters = [];
+      }
+      else if(this.postsData[postIndex].voters.findIndex((x)=> x.name == voter.name) != -1) 
+      {
+        return this.postsData[postIndex];
+      }
+      this.postsData[postIndex].voters.push(voter);
+      this.postsData[postIndex].votes++;
+    }
+    return this.postsData[postIndex];
+  }
+  // async upvote(id, voter) {
+  //   let post = this.postsData.find((x) => x.id == id);
+  //   if(post != undefined)
+  //   {
+  //     if(post.voters == null)
+  //     {
+  //       post.voters = [];
+  //     }
+  //     else if(post.voters.find((x)=> x.name == voter.name) != undefined) 
+  //     {
+  //       return post;
+  //     }
+  //     post.voters.push(voter);
+  //     post.votes++;
+  //   }
+  //   return post;
+  // }
 }
