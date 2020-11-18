@@ -52,12 +52,10 @@ export class MemoryDataSource extends DataSource {
       if(postIndex != -1)
       {
         const currentPost =  this.postsData[postIndex];
-        currentPost.voters.add(voter);
+        currentPost.voters.add(voter.name);
         currentPost.votes = currentPost.voters.size;
         return currentPost;
       }
       return undefined;
     }
-   
   }
-  
