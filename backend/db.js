@@ -17,6 +17,10 @@ export class Post {
 }
 
 export class MemoryDataSource extends DataSource {
+<<<<<<< HEAD
+=======
+    //TODO  constructor injection
+>>>>>>> 78db159469d86299b9f21842c71e9878f2df98e1
     constructor() {
       super();
   
