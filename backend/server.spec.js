@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals";
 import { createTestClient } from "apollo-server-testing";
-import { gql, mergeSchemas } from "apollo-server";
+import { gql } from "apollo-server";
 import Server from "./server";
-import { MemoryDataSource, Post, User } from "./db";
+import { MemoryDataSource } from "./db";
 
 let query = undefined;
 let mutate = undefined;
