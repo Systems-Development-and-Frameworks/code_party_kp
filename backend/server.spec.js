@@ -33,6 +33,7 @@ describe("queries", () => {
         }
       }
     `;
+    //TODO USERS_DEEP
 
     it("returns empty array", async () => {
       await expect(query({ query: USERS })).resolves.toMatchObject({
@@ -120,53 +121,137 @@ describe("queries", () => {
   });
 });
 
-// describe('mutations', () => {
-//   beforeEach(() => {
-//     db = new MemoryDataSource()
-//   })
+describe("mutations", () => {
+  beforeEach(() => {
+    db = new MemoryDataSource();
+  });
 
-//   describe('WRITE_POST', () => {
-//     const action = () => mutate({ mutation: WRITE_POST, variables: { title: 'Some post' } })
-//     const WRITE_POST = gql`
-//     mutation($title: String!) {
-//       write(title: $title) {
-//         id
-//         title
-//       }
-//     }
-//   `
+  describe("WRITE_POST", () => {
+    const action = () =>
+      mutate({
+        mutation: WRITE_POST,
+        variables: { post: { title: "Some post", author: { name: "Peter" } } },
+      });
+    const WRITE_POST = gql`
+      mutation($post: PostInput!) {
+        write(post: $post) {
+          id
+          title
+          votes
+          author {
+            name
+          }
+        }
+      }
+    `;
 
+    it("adds a post to db.postsData", async () => {
+      expect(db.postsData).toHaveLength(0);
+      await action();
+      expect(db.postsData).toHaveLength(1);
+    });
 
-    describe('given posts in the database', () => {
+    it("calls db.addnewPost", async () => {
+      db.addnewPost = jest.fn(() => {});
+      await action();
+      expect(db.addnewPost).toHaveBeenCalledWith({
+        title: "Some post",
+        author: { name: "Peter" },
+      });
+    });
+
+    it("responds with created post", async () => {
+      await expect(action()).resolves.toMatchObject({
+        errors: undefined,
+        data: {
+          write: {
+            title: "Some post",
+            id: expect.any(String),
+            votes: 0,
+            author: { name: "Peter" },
+          },
+        },
+      });
+    });
+  });
+
+  describe("UPVOTE", () => {
+    let id = 500;
+    let voterName = "Peter";
+    const action = () =>
+      mutate({
+        mutation: UPVOTE,
+        variables: { id: id, voter: { name: voterName } },
+      });
+
+    const UPVOTE = gql`
+      mutation($id: ID!, $voter: UserInput!) {
+        upvote(id: $id, voter: $voter) {
+          id
+          title
+          votes
+          author {
+            name
+          }
+        }
+      }
+    `;
+
+    it("responds with null when the post doesn't exist", async () => {
+      await expect(action()).resolves.toMatchObject({
+        errors: undefined,
+        data: { upvote: null },
+      });
+    });
+
+    describe("given posts in the database", () => {
       beforeEach(() => {
-        db.addnewPost(new Post({ title: 'Some post', author: {name: "Any author"} }))
-      })
+        db.addnewPost({
+          title: "Pinguine sind keine Vögel",
+          author: { name: "Peter" },
+        });
+        id = db.postsData[0].id;
+      });
+      it("upvotes a post", async () => {
+        expect(db.postsData[0].votes).toBe(0);
+        await action();
+        expect(db.postsData[0].votes).toBe(1);
+      });
 
-      it('returns posts', async () => {
-        await expect(query({ query: POSTS }))
-          .resolves
-          .toMatchObject({
-            errors: undefined,
-            data: { posts: [{ title: 'Some post', id: expect.any(String) }] }
-          })
-      })
-    })
-  })
-})
+      it("calls db.upvote", async () => {
+        db.upvote = jest.fn(() => {});
+        await action();
+        expect(db.upvote).toHaveBeenCalledWith(id, { name: voterName });
+      });
 
-//     it('calls db.createPost', async () => {
-//       db.createPost = jest.fn(() => {})
-//       await action()
-//       expect(db.createPost).toHaveBeenCalledWith({ title: 'Some post' })
-//     })
+      it("responds with the upvoted post", async () => {
+        await expect(action()).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            upvote: {
+              votes: 1,
+              title: "Pinguine sind keine Vögel",
+              id: expect.any(String),
+              author: { name: "Peter" },
+            },
+          },
+        });
+      });
 
-//     it('responds with created post', async () => {
-//       await expect(action())
-//         .resolves
-//         .toMatchObject({
-//           errors: undefined,
-//           data: { write: { title: 'Some post', id: expect.any(String) } }
-//         })
-//     })
-//   })
-// })
+      it("upvoting a post twice by the same user results in 1 vote", async () => {
+        expect(db.postsData[0].votes).toBe(0);
+        await action();
+        await action();
+        expect(db.postsData[0].votes).toBe(1);
+      });
+
+      it("upvoting a post by two users should result in 2 votes", async () => {
+        expect(db.postsData[0].votes).toBe(0);
+        await action();
+        voterName = "Peter's brother";
+        await action();
+        expect(db.postsData[0].votes).toBe(2);
+      });
+    });
+  });
+});
