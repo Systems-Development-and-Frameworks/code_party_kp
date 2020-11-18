@@ -30,6 +30,20 @@ describe('queries', () => {
         })
     })
 
+    describe('given posts in the database', () => {
+      beforeEach(() => {
+        db.addnewPost(new Post({ title: 'Some post', author: {name: "Any author"} }))
+      })
+
+      it('returns posts', async () => {
+        await expect(query({ query: POSTS }))
+          .resolves
+          .toMatchObject({
+            errors: undefined,
+            data: { posts: [{ title: 'Some post', id: expect.any(String) }] }
+          })
+      })
+    })
   })
 })
 
