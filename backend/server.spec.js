@@ -136,11 +136,23 @@ describe("queries", () => {
 //     }
 //   `
 
-//     it('adds a post to db.posts', async () => {
-//       expect(db.posts).toHaveLength(0)
-//       await action()
-//       expect(db.posts).toHaveLength(1)
-//     })
+
+    describe('given posts in the database', () => {
+      beforeEach(() => {
+        db.addnewPost(new Post({ title: 'Some post', author: {name: "Any author"} }))
+      })
+
+      it('returns posts', async () => {
+        await expect(query({ query: POSTS }))
+          .resolves
+          .toMatchObject({
+            errors: undefined,
+            data: { posts: [{ title: 'Some post', id: expect.any(String) }] }
+          })
+      })
+    })
+  })
+})
 
 //     it('calls db.createPost', async () => {
 //       db.createPost = jest.fn(() => {})
