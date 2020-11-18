@@ -18,7 +18,7 @@ const resolvers = {
     users: async (_parent, _args, context) => {
       return context.dataSources.db.users();
     },
-    posts: async (_parent, _args, { dataSources }) => {
+    posts: async (_parent, _args, context) => {
       return context.dataSources.db.posts();
     },
   },
