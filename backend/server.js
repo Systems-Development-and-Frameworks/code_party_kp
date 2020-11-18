@@ -1,11 +1,11 @@
 import { ApolloServer } from 'apollo-server'
-import typeDefs from './typeDefs'
-import { MemoryDataSource, Post, User } from './db'
+import typeDefs from './typeDefs.js'
+import { MemoryDataSource, Post, User } from './db.js'
 
 const db = new MemoryDataSource()
 db.addnewPost(
     {title: "Pinguine sind keine Vögel",
-    author: {name: "Peter"}},);
+    author: {name: "Peter"}});
 
 const dataSources = () => ({ db })
 
@@ -18,7 +18,7 @@ const resolvers = {
     users: async (_parent, _args, context) => {
       return context.dataSources.db.users();
     },
-    posts: async (_parent, _args, { dataSources }) => {
+    posts: async (_parent, _args, context) => {
       return context.dataSources.db.posts();
     },
   },
