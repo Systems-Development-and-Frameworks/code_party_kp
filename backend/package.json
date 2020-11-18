@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --colors",
     "dev": "nodemon -r esm index.js"
   },
   "keywords": [],
@@ -12,10 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.19.0",
+    "apollo-server-testing": "^2.19.0",
     "esm": "^3.2.25",
-    "graphql": "^15.4.0"
+    "graphql": "^15.4.0",
+    "jest": "^26.6.3"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.12.1",
     "eslint": "^7.13.0"
   }
 }
