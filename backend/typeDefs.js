@@ -1,4 +1,4 @@
-import {gql} from 'apollo-server'
+import { gql } from "apollo-server";
 
 const typeDefs = gql`
   type Post {
@@ -29,7 +29,6 @@ const typeDefs = gql`
 
     # 🚀 OPTIONAL
     # downvote(id: ID!, voter: UserInput!): Post
-
   }
 
   input PostInput {
@@ -42,6 +41,5 @@ const typeDefs = gql`
   input UserInput {
     name: String!
   }
-
-`
-export default typeDefs
+`;
+export default typeDefs;
