@@ -33,7 +33,6 @@ describe("queries", () => {
         }
       }
     `;
-    //TODO USERS_DEEP
 
     it("returns empty array", async () => {
       await expect(query({ query: USERS })).resolves.toMatchObject({
@@ -63,6 +62,77 @@ describe("queries", () => {
                     id: expect.any(String),
                     votes: 0,
                     author: { name: "Peter" },
+                  },
+                ],
+              },
+            ],
+          },
+        });
+      });
+      it("is able to serve nested queries", async () => {
+        const USERS_NESTED = gql`
+          query {
+            users {
+              name
+              posts {
+                title
+                id
+                votes
+                author {
+                  name
+                  posts {
+                    title
+                    id
+                    votes
+                    author {
+                      name
+                      posts {
+                        title
+                        id
+                        votes
+                        author {
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `;
+        await expect(query({ query: USERS_NESTED })).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            users: [
+              {
+                name: "Peter",
+                posts: [
+                  {
+                    title: "Pinguine sind keine Vögel",
+                    id: expect.any(String),
+                    votes: 0,
+                    author: {
+                      name: "Peter",
+                      posts: [
+                        {
+                          title: "Pinguine sind keine Vögel",
+                          id: expect.any(String),
+                          votes: 0,
+                          author: {
+                            name: "Peter",
+                            posts: [
+                              {
+                                title: "Pinguine sind keine Vögel",
+                                id: expect.any(String),
+                                votes: 0,
+                                author: { name: "Peter" },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
                   },
                 ],
               },
