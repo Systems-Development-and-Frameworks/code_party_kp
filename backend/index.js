@@ -17,7 +17,6 @@ const typeDefs = gql`
     title: String!
     votes: Int!
     author: User!
-    voters: [User]
   }
 
   type User {
@@ -122,9 +121,9 @@ class MemoryDataSource extends DataSource {
     let post = {
       id: this.postsData.length,
       title: _title,
-      votes: 0 /*TODO or empty set */,
+      votes: 0 ,
       author: _author,
-      voters : [{name: "a"}]
+      voters : new Set()
     };
     
     //it's a set, doesn't matter if exists or not
@@ -149,34 +148,12 @@ class MemoryDataSource extends DataSource {
     let postIndex = this.postsData.findIndex((x) => x.id == id);
     if(postIndex != -1)
     {
-      if(this.postsData[postIndex].voters == null)
-      {
-        this.postsData[postIndex].voters = [];
-      }
-      else if(this.postsData[postIndex].voters.findIndex((x)=> x.name == voter.name) != -1) 
-      {
-        return this.postsData[postIndex];
-      }
-      this.postsData[postIndex].voters.push(voter);
-      this.postsData[postIndex].votes++;
+      const currentPost =  this.postsData[postIndex];
+      currentPost.voters.add(voter);
+      currentPost.votes = currentPost.voters.size;
+      return currentPost;
     }
-    return this.postsData[postIndex];
+    return undefined;
   }
-  // async upvote(id, voter) {
-  //   let post = this.postsData.find((x) => x.id == id);
-  //   if(post != undefined)
-  //   {
-  //     if(post.voters == null)
-  //     {
-  //       post.voters = [];
-  //     }
-  //     else if(post.voters.find((x)=> x.name == voter.name) != undefined) 
-  //     {
-  //       return post;
-  //     }
-  //     post.voters.push(voter);
-  //     post.votes++;
-  //   }
-  //   return post;
-  // }
+ 
 }
