@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server";
 import typeDefs from "./typeDefs.js";
-import { MemoryDataSource, Post, User } from "./db.js";
+import { MemoryDataSource } from "./db.js";
 
 const db = new MemoryDataSource();
 db.addnewPost({
