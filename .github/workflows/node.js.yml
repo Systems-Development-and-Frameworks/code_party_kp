@@ -3,7 +3,7 @@ name: "CI"
 on: [push, pull_request]
 
 jobs:
-    test backend:
+    test_backend:
       name: test
       runs-on: ubuntu-latest
       strategy:
@@ -20,7 +20,7 @@ jobs:
               npm run test
         working-directory: ./backend/
     
-    lint backend:
+    lint_backend:
       name: lint
       runs-on: ubuntu-latest
       strategy:
@@ -37,7 +37,7 @@ jobs:
               npm run lint
         working-directory: ./backend/
 
-    test webapp:
+    test_webapp:
       name: test
       runs-on: ubuntu-latest
       strategy:
@@ -54,7 +54,7 @@ jobs:
               npm run test
         working-directory: ./webapp/
     
-    lint webapp:
+    lint_webapp:
       name: lint
       runs-on: ubuntu-latest
       strategy:
