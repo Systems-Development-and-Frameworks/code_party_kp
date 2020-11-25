@@ -1,9 +1,9 @@
 name: "CI"
 
-on: [push]
+on: [push, pull_request]
 defaults:
   run:
-    working-directory: ./exercises/2/webapp/
+    working-directory: ./backend/
 
 jobs:
     test:
@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
               npm install
-              npm run test:unit
+              npm run test
     
     lint:
       name: lint
