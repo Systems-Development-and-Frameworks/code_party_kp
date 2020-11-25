@@ -1,5 +1,7 @@
 import { DataSource } from "apollo-datasource";
+import jsonwebtoken from 'jsonwebtoken'
 import crypto from "crypto";
+import bcrypt from 'bcrypt'
 
 export class User {
   constructor(data) {
@@ -24,7 +26,7 @@ export class MemoryDataSource extends DataSource {
     this.postsData = [];
   }
 
-  initialize() {}
+  initialize() { }
 
   async addnewPost(postInput) {
     let post = await new Post(postInput);
@@ -35,6 +37,33 @@ export class MemoryDataSource extends DataSource {
     //posts can have duplicate content, as long as id's are different, so no checks needed
     this.postsData.push(post);
     return post;
+  }
+
+  async signUp({ name, email, password }) {
+    const user = await new User({ name, email, password: await bcrypt.hash(password, 10) })
+    this.users.push(user)
+    return jsonwebtoken.sign(
+      { id: user.id }, process.env.JWT_SECRET
+    )
+    if (this.isEMailExists(email)) {
+      throw new UserInputError("Email exists already!")
+    }
+    if (!this.isPwStrong(password)) {
+      throw new UserInputError("The passwort has to include more than 7 characters!")
+    }
+  }
+
+  async loginHelper({ email, password }) {
+    const user = this.users.find(user => user.email === email)
+    if (!user) {
+      throw new UserInputError("There is no user registered with this EMail!")
+    }
+
+    const validate = await bcrypt.compare(password, user.password)
+    if (!validate) {
+      throw new AuthenticationError('Passwort is not correct!')
+    }
+    return jsonwebtoken.sign({ id: user.id }, process.env.JWT_SECRET)
   }
 
   async posts() {
@@ -57,7 +86,16 @@ export class MemoryDataSource extends DataSource {
   //   }
   //   return undefined;
   // }
-  async upvote(id /*=post id */){
+  async upvote(id /*=post id */) {
     return postIndex = this.postsData.find((x) => x.id == id);
   }
+
+  isPwStrong(password) {
+    return password.length > 7
+  }
+
+  isEMailExists(email) {
+    return this.users.find(user => user.email === email)
+  }
+
 }
