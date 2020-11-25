@@ -5,7 +5,7 @@ import { MemoryDataSource } from "./db.js";
 const db = new MemoryDataSource();
 db.addnewPost({
   title: "Pinguine sind keine Vögel",
-  author: { name: "Peter" },
+  author: { name: "Peter", email: "peter@gmail.com" },
 });
 
 const dataSources = () => ({ db });
@@ -25,7 +25,7 @@ const resolvers = {
   },
   User: {
     posts: async (parent, _args, context) => {
-      return context.dataSources.db.getPosts(parent.name);
+      return context.dataSources.db.getPosts(parent.id);
     },
   },
   Mutation: {
