@@ -2,7 +2,7 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
 var privateKEY = fs.readFileSync('.backend/jwt/private_jwtRS256.key', 'utf8');
-var publicKEY = fs.readFileSync('./src/jwt/public_jwtRS256.key', 'utf8');
+var publicKEY = fs.readFileSync('.backend/jwt/public_jwtRS256.key', 'utf8');
 
 module.exports = {
     sign: (payload, $Options) => {
