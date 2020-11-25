@@ -18,7 +18,7 @@ jobs:
       - run: |
               npm install
               npm run test
-	working-directory: ./backend/
+        working-directory: ./backend/
     
     lint backend:
       name: lint
@@ -35,7 +35,7 @@ jobs:
       - run: |
               npm install
               npm run lint
-	working-directory: ./backend/
+        working-directory: ./backend/
 
     test webapp:
       name: test
@@ -52,7 +52,7 @@ jobs:
       - run: |
               npm install
               npm run test
-	working-directory: ./webapp/
+        working-directory: ./webapp/
     
     lint webapp:
       name: lint
@@ -69,4 +69,4 @@ jobs:
       - run: |
               npm install
               npm run lint
-	working-directory: ./webapp/
+        working-directory: ./webapp/
