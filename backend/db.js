@@ -13,7 +13,9 @@ export class Post {
   constructor(data) {
     this.id = crypto.randomBytes(16).toString("hex"); //TODO: another way?
     this.votes = 0;
-    this.author = new User(data.author); /////////////!! Problem
+    let a = new User(data.author);
+    delete data.author;
+    data.author = a; /////////////!! Problem
     this.voters = new Set();
     Object.assign(this, data);
   }
@@ -32,8 +34,7 @@ export class MemoryDataSource extends DataSource {
     let post = await new Post(postInput);
 
     //it's a set, doesn't matter if exists or not
-    this.usersData.add(new User(postInput.author)); //!!!!!!!!!!!!!!!!Problem
-    //this.usersData.add(post.author);
+    this.usersData.add(post.author);
     //posts can have duplicate content, as long as id's are different, so no checks needed
     this.postsData.push(post);
     return post;
