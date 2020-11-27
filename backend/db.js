@@ -1,11 +1,16 @@
 import { DataSource } from "apollo-datasource";
+import {AuthenticationError, UserInputError} from "apollo-server";
 import jsonwebtoken from 'jsonwebtoken'
 import crypto from "crypto";
 import bcrypt from 'bcrypt'
+import * as dotenv from 'dotenv';
+
+// loading .env file
+dotenv.config();
 
 export class User {
   constructor(data) {
-    this.id = crypto.randomBytes(16).toString("hex");; //TODO: another way? 
+    this.id = crypto.randomBytes(16).toString("hex"); //TODO: another way? 
     Object.assign(this, data);
   }
 }
@@ -39,19 +44,26 @@ export class MemoryDataSource extends DataSource {
     this.postsData.push(post);
     return post;
   }
+  isPwStrong(password) {
+    return password.length > 7
+  }
+
+  isEMailExists(email) {
+    return this.users.find(user => user.email === email)
+  }
 
   async signUp({ name, email, password }) {
-    const user = await new User({ name, email, password: await bcrypt.hash(password, 10) })
-    this.users.push(user)
-    return jsonwebtoken.sign(
-      { id: user.id }, process.env.JWT_SECRET
-    )
     if (this.isEMailExists(email)) {
       throw new UserInputError("Email exists already!")
     }
     if (!this.isPwStrong(password)) {
       throw new UserInputError("The passwort has to include more than 7 characters!")
     }
+    const user = await new User({ name, email, password: await bcrypt.hash(password, 10) });
+    this.users.push(user)
+    return jsonwebtoken.sign(
+      { id: user.id }, process.env.JWT_SECRET
+    )
   }
 
   async loginHelper({ email, password }) {
@@ -88,15 +100,8 @@ export class MemoryDataSource extends DataSource {
   //   return undefined;
   // }
   async upvote(id /*=post id */) {
-    return postIndex = this.postsData.find((x) => x.id == id);
+    return this.postsData.find((x) => x.id == id);
   }
 
-  isPwStrong(password) {
-    return password.length > 7
-  }
-
-  isEMailExists(email) {
-    return this.users.find(user => user.email === email)
-  }
-
+  
 }
