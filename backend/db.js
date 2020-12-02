@@ -27,22 +27,35 @@ export class MemoryDataSource extends DataSource {
   initialize() {}
 
   addnewPost(postInput) {
-    //TODO author here
     let post = new Post(postInput);
-
     //posts can have duplicate content, as long as id's are different, so no checks needed
     this.postsData.push(post);
     return post;
   }
 
+  addnewUser(userInput) {
+    let user = new User(userInput);
+    this.usersData.push(user);
+    return user;
+  }
+
   async posts() {
     return this.postsData;
   }
+
   async getPosts(id) {
     return this.postsData.filter((x) => x.author.id == id);
   }
 
-  async getUser(id) {
+  async emailExists(email) {
+    return this.getUserByEmail(email) != undefined;
+  }
+
+  async getUserByEmail(email) {
+    return this.usersData.filter((x) => x.email == email);
+  }
+
+  async getUserById(id) {
     return this.usersData.filter((x) => x.id == id);
   }
 

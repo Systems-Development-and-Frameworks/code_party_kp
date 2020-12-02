@@ -1,11 +1,14 @@
 export const postsMutationResolver = {
   Mutation: {
-    write: (parent, _args, context) => {
-      return context.dataSources.db.addnewPost(_args.post);
+    write: async (parent, _args, context) => {
+      //TODO check if ID always contained in context. Can it be generalized? in permissions?
+      let user = await context.dataSources.db.getUserById(context.id);
+      return context.dataSources.db.addnewPost({ ..._args.post, author: user });
     },
-    upvote: (parent, _args, context) => {
-      //TODO voter from context
-      return context.dataSources.db.upvote(_args.id, _args.voter);
+    upvote: async (parent, _args, context) => {
+      //TODO check if ID always contained in context. Can it be generalized? in permissions?
+      let user = await context.dataSources.db.getUserById(context.id);
+      return context.dataSources.db.upvote(_args.id, user);
     },
   },
 };
