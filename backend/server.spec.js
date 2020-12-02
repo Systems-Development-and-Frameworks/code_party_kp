@@ -192,10 +192,6 @@ describe("queries", () => {
 });
 
 describe("mutations", () => {
-  beforeEach(() => {
-    db = new MemoryDataSource();
-  });
-
   describe("WRITE_POST", () => {
     const action = () =>
       mutate({
@@ -214,33 +210,42 @@ describe("mutations", () => {
         }
       }
     `;
-
-    it("adds a post to db.postsData", async () => {
-      expect(db.postsData).toHaveLength(0);
-      await action();
-      expect(db.postsData).toHaveLength(1);
-    });
-
-    it("calls db.addnewPost", async () => {
-      db.addnewPost = jest.fn(() => {});
-      await action();
-      expect(db.addnewPost).toHaveBeenCalledWith({
-        title: "Some post",
-        author: { name: "Peter" },
+    describe("given the user is not authenticated", () => {
+      it("throws an error", () => {
+        fail("TODO");
       });
     });
+    describe("given the user is authenticated", () => {
+      beforeEach(() => {
+        //TODO auth
+      });
+      it("adds a post to db.postsData", async () => {
+        expect(db.postsData).toHaveLength(0);
+        await action();
+        expect(db.postsData).toHaveLength(1);
+      });
 
-    it("responds with created post", async () => {
-      await expect(action()).resolves.toMatchObject({
-        errors: undefined,
-        data: {
-          write: {
-            title: "Some post",
-            id: expect.any(String),
-            votes: 0,
-            author: { name: "Peter" },
+      it("calls db.addnewPost", async () => {
+        db.addnewPost = jest.fn(() => {});
+        await action();
+        expect(db.addnewPost).toHaveBeenCalledWith({
+          title: "Some post",
+          author: { name: "Peter" },
+        });
+      });
+
+      it("responds with created post", async () => {
+        await expect(action()).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            write: {
+              title: "Some post",
+              id: expect.any(String),
+              votes: 0,
+              author: { name: "Peter" },
+            },
           },
-        },
+        });
       });
     });
   });
@@ -267,60 +272,133 @@ describe("mutations", () => {
       }
     `;
 
-    it("responds with null when the post doesn't exist", async () => {
-      await expect(action()).resolves.toMatchObject({
-        errors: undefined,
-        data: { upvote: null },
+    describe("given the user is not authenticated", () => {
+      it("throws an error", () => {
+        fail("TODO");
       });
     });
 
-    describe("given posts in the database", () => {
+    describe("given the user is authenticated", () => {
       beforeEach(() => {
-        db.addnewPost({
-          title: "Pinguine sind keine Vögel",
-          author: { name: "Peter" },
-        });
-        id = db.postsData[0].id;
+        //TODO auth
       });
-      it("upvotes a post", async () => {
-        expect(db.postsData[0].votes).toBe(0);
-        await action();
-        expect(db.postsData[0].votes).toBe(1);
-      });
-
-      it("calls db.upvote", async () => {
-        db.upvote = jest.fn(() => {});
-        await action();
-        expect(db.upvote).toHaveBeenCalledWith(id, { name: voterName });
-      });
-
-      it("responds with the upvoted post", async () => {
+      it("responds with null when the post doesn't exist", async () => {
         await expect(action()).resolves.toMatchObject({
           errors: undefined,
-          data: {
-            upvote: {
-              votes: 1,
-              title: "Pinguine sind keine Vögel",
-              id: expect.any(String),
-              author: { name: "Peter" },
-            },
-          },
+          data: { upvote: null },
         });
       });
 
-      it("upvoting a post twice by the same user results in 1 vote", async () => {
-        expect(db.postsData[0].votes).toBe(0);
-        await action();
-        await action();
-        expect(db.postsData[0].votes).toBe(1);
+      describe("given posts in the database", () => {
+        beforeEach(() => {
+          db.addnewPost({
+            title: "Pinguine sind keine Vögel",
+            author: { name: "Peter" },
+          });
+          id = db.postsData[0].id;
+        });
+        it("upvotes a post", async () => {
+          expect(db.postsData[0].votes).toBe(0);
+          await action();
+          expect(db.postsData[0].votes).toBe(1);
+        });
+
+        it("calls db.upvote", async () => {
+          db.upvote = jest.fn(() => {});
+          await action();
+          expect(db.upvote).toHaveBeenCalledWith(id, { name: voterName });
+        });
+
+        it("responds with the upvoted post", async () => {
+          await expect(action()).resolves.toMatchObject({
+            errors: undefined,
+            data: {
+              upvote: {
+                votes: 1,
+                title: "Pinguine sind keine Vögel",
+                id: expect.any(String),
+                author: { name: "Peter" },
+              },
+            },
+          });
+        });
+
+        it("upvoting a post twice by the same user results in 1 vote", async () => {
+          expect(db.postsData[0].votes).toBe(0);
+          await action();
+          await action();
+          expect(db.postsData[0].votes).toBe(1);
+        });
+
+        it("upvoting a post by two users should result in 2 votes", async () => {
+          expect(db.postsData[0].votes).toBe(0);
+          await action();
+          voterName = "Peter's brother";
+          await action();
+          expect(db.postsData[0].votes).toBe(2);
+        });
+      });
+    });
+  });
+  describe("SIGNUP", () => {
+    const actionWithParam = (name, email, password) =>
+      mutate({
+        mutation: SIGNUP,
+        variables: {
+          post: { name: name, email: email, password: password },
+        },
+      });
+    const action = () =>
+      actionWithParam("AzureDiamond", "AzureDiamond@fake.com", "hunter2");
+    const SIGNUP = gql`
+      mutation($name: String!, $email: String!, $password: String!) {
+        write(name: $name, email: $email, password: $password) {
+          jwt
+        }
+      }
+    `;
+    it("return null if password < 8 characters", () => {
+      fail("TODO");
+    });
+
+    it("return null if email is taken", () => {
+      fail("TODO");
+    });
+    it("return a JWT if password > 8 characters and email is free", () => {
+      fail("TODO");
+    });
+  });
+
+  describe("LOGIN", () => {
+    const actionWithParam = (email, password) =>
+      mutate({
+        mutation: LOGIN,
+        variables: {
+          post: { email: email, password: password },
+        },
+      });
+    const action = () => actionWithParam("AzureDiamond@fake.com", "hunter2");
+    const LOGIN = gql`
+      mutation($email: String!, $password: String!) {
+        write(email: $email, password: $password) {
+          jwt
+        }
+      }
+    `;
+    it("if the user does not exist, return null", async () => {
+      fail("TODO");
+    });
+
+    describe("given the user exists", () => {
+      beforeEach(() => {
+        //TODO add user
       });
 
-      it("upvoting a post by two users should result in 2 votes", async () => {
-        expect(db.postsData[0].votes).toBe(0);
-        await action();
-        voterName = "Peter's brother";
-        await action();
-        expect(db.postsData[0].votes).toBe(2);
+      it("returns a valid JWT if password matches", () => {
+        fail("TODO");
+      });
+      it("returns null if password doesn't match", () => {
+        fail("TODO");
       });
     });
   });
