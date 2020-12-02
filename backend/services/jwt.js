@@ -6,9 +6,15 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 export function verifyToken(token) {
-  jwt.verify(token, process.env.JWT_SECRET);
+  var verifyOptions = {
+    expiresIn: "3h",
+  };
+  jwt.verify(token, process.env.JWT_SECRET, verifyOptions);
 }
 
 export function issueToken(id) {
-  return jsonwebtoken.sign({ id: id }, process.env.JWT_SECRET);
+  var signOptions = {
+    expiresIn: "3h",
+  };
+  return jsonwebtoken.sign({ id: id }, process.env.JWT_SECRET, signOptions);
 }
