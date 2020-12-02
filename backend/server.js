@@ -20,7 +20,7 @@ db.addnewPost({
 const dataSources = () => ({ db });
 
 export function context({ req }) {
-  let token = req?.headers?.authorization ?? "";
+  let token = req.headers.authorization ?? "";
   token = token.replace("Bearer ", "");
   try {
     const decodedJWT = verifyToken(token);

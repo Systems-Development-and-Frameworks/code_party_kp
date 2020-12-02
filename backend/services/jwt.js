@@ -9,7 +9,7 @@ export function verifyToken(token) {
   var verifyOptions = {
     expiresIn: "3h",
   };
-  jwt.verify(token, process.env.JWT_SECRET, verifyOptions);
+  return jwt.verify(token, process.env.JWT_SECRET, verifyOptions);
 }
 
 export function issueToken(id) {
