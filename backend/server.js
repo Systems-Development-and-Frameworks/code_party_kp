@@ -3,10 +3,10 @@ import typeDefs from "./typeDefs.js";
 import { MemoryDataSource } from "./db.js";
 import { permissions } from "./permissions.js";
 import { verifyToken } from "./services/jwt.js";
-const path = require("path");
 
 import { applyMiddleware } from "graphql-middleware";
-import { makeExecutableSchema, mergeResolvers } from "graphql-tools";
+import { makeExecutableSchema } from "graphql-tools";
+import { mergeResolvers } from "@graphql-tools/merge";
 import { postsMutationResolver } from "./resolvers/mutations_post";
 import { usersMutationResolver } from "./resolvers/user_mutations";
 import { queryResolver } from "./resolvers/query_all";
