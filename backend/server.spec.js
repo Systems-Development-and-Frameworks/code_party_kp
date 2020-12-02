@@ -1,5 +1,6 @@
 import { jest } from "@jest/globals";
 import { createTestClient } from "apollo-server-testing";
+import {AuthenticationError} from "apollo-server-errors";
 import { gql } from "apollo-server";
 import Server from "./server";
 import { MemoryDataSource } from "./db";
@@ -212,7 +213,7 @@ describe("mutations", () => {
     `;
     describe("given the user is not authenticated", () => {
       it("throws an error", () => {
-        fail("TODO");
+        expect(action()).resolves.toMatchObject({errors: [new AuthenticationError("No user exists")]})
       });
     });
     describe("given the user is authenticated", () => {
@@ -273,8 +274,26 @@ describe("mutations", () => {
     `;
 
     describe("given the user is not authenticated", () => {
-      it("throws an error", () => {
-        fail("TODO");
+      const action = () =>
+      mutate({
+        mutation: WRITE_POST,
+        variables: { post: { title: "test post", author: { name: "testuser1" } } },
+      });
+    const WRITE_POST = gql`
+      mutation($post: PostInput!) {
+        write(post: $post) {
+          id
+          title
+          votes
+          author {
+            name
+          }
+        }
+      }
+    `;
+      it("throws an error with not existing user", async() => {
+        await expect(action()).resolves.toMatchObject({errors: [new AuthenticationError("No user exists")]
+        })
       });
     });
 
