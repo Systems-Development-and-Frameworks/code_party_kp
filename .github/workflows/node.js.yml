@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
     test_backend:
-      name: test-backend
+      name: backend:test
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -21,7 +21,7 @@ jobs:
         working-directory: ./backend/
     
     lint_backend:
-      name: lint-backend
+      name: backend:lint
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -38,7 +38,7 @@ jobs:
         working-directory: ./backend/
 
     test_webapp:
-      name: test-webapp
+      name: webapp:test
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -55,7 +55,7 @@ jobs:
         working-directory: ./webapp/
     
     lint_webapp:
-      name: lint-webapp
+      name: webapp:lint
       runs-on: ubuntu-latest
       strategy:
         matrix:
