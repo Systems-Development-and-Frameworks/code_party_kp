@@ -1,16 +1,15 @@
-import { jest } from "@jest/globals";
 import { createTestClient } from "apollo-server-testing";
-import { AuthenticationError } from "apollo-server-errors";
 import { gql } from "apollo-server";
 import Server from "../server";
-import { MemoryDataSource } from "../db";
+import { MemoryDataSource, User, Post } from "../db";
 
 let query = undefined;
+let server = undefined;
 let db = undefined;
 
 beforeEach(() => {
   db = new MemoryDataSource();
-  const server = new Server({ dataSources: () => ({ db }) });
+  server = new Server({ dataSources: () => ({ db }) });
   let testClient = createTestClient(server);
   query = testClient.query;
 });
@@ -42,10 +41,19 @@ describe("queries", () => {
 
     describe("given users in the database", () => {
       beforeEach(() => {
-        db.addnewPost({
-          title: "Pinguine sind keine Vögel",
-          author: { name: "Peter" },
+        let user = new User({
+          name: "Peter",
+          email: "peter@widerstand-der-penguine.ev",
+          password: "hashed",
+          id: "1",
         });
+        let post = new Post({
+          title: "Pinguine sind keine Vögel",
+          author: user,
+          id: "11",
+        });
+        db.usersData.push(user);
+        db.postsData.push(post);
       });
 
       it("returns users", async () => {
@@ -165,10 +173,19 @@ describe("queries", () => {
 
     describe("given posts in the database", () => {
       beforeEach(() => {
-        db.addnewPost({
-          title: "Pinguine sind keine Vögel",
-          author: { name: "Peter" },
+        let user = new User({
+          name: "Peter",
+          email: "peter@widerstand-der-penguine.ev",
+          password: "hashed",
+          id: "1",
         });
+        let post = new Post({
+          title: "Pinguine sind keine Vögel",
+          author: user,
+          id: "11",
+        });
+        db.usersData.push(user);
+        db.postsData.push(post);
       });
 
       it("returns posts", async () => {

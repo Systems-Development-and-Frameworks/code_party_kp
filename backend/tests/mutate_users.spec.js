@@ -1,6 +1,4 @@
-import { jest } from "@jest/globals";
 import { createTestClient } from "apollo-server-testing";
-import { AuthenticationError } from "apollo-server-errors";
 import { gql } from "apollo-server";
 import Server from "../server";
 import { MemoryDataSource } from "../db";

@@ -20,7 +20,7 @@ export class MemoryDataSource extends DataSource {
   constructor() {
     super();
 
-    this.usersData = new Set();
+    this.usersData = [];
     this.postsData = [];
   }
 
@@ -52,11 +52,11 @@ export class MemoryDataSource extends DataSource {
   }
 
   async getUserByEmail(email) {
-    return this.usersData.filter((x) => x.email == email);
+    return this.usersData.find((x) => x.email == email);
   }
 
   async getUserById(id) {
-    return this.usersData.filter((x) => x.id == id);
+    return this.usersData.find((x) => x.id == id);
   }
 
   async users() {
