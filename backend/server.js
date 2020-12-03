@@ -3,7 +3,6 @@ import typeDefs from "./typeDefs.js";
 import { MemoryDataSource } from "./db.js";
 import { permissions } from "./permissions.js";
 import { context } from "./context.js";
-
 import { applyMiddleware } from "graphql-middleware";
 import { makeExecutableSchema } from "graphql-tools";
 import { mergeResolvers } from "@graphql-tools/merge";
@@ -13,10 +12,11 @@ import { queryResolver } from "./resolvers/query_all";
 
 const db = new MemoryDataSource();
 //add some dummy data
-db.addnewPost({
-  title: "Pinguine sind keine Vögel",
-  author: { name: "Peter", email: "peter@gmail.com" },
-});
+//TODO
+// db.addnewPost({
+//   title: "Pinguine sind keine Vögel",
+//   author: { name: "Peter", email: "peter@gmail.com" },
+// });
 
 const dataSources = () => ({ db });
 

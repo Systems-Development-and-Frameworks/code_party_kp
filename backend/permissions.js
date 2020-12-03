@@ -1,15 +1,24 @@
 // Rules
-import { rule, shield, and, or, not } from "graphql-shield";
+import { rule, shield, allow } from "graphql-shield";
 
 const isAuthenticated = rule({ cache: "contextual" })(
   async (parent, args, { dataSources }, info) => {
-    return dataSources.db.user !== null;
+    //TODO
+    return true;
   }
 );
 
-export const permissions = shield({
-  Mutation: {
-    upvote: isAuthenticated,
-    write: isAuthenticated,
+export const permissions = shield(
+  {
+    Query: {
+      "*": allow,
+    },
+
+    Mutation: {
+      "*": allow,
+      upvote: isAuthenticated,
+      write: isAuthenticated,
+    },
   },
-});
+  { allowExternalErrors: true }
+);

@@ -1,9 +1,6 @@
-import dotenv from "dotenv";
-import jsonwebtoken from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
-// loading .env file
-dotenv.config();
+require("dotenv-flow").config();
 
 export function verifyToken(token) {
   var verifyOptions = {
@@ -16,5 +13,5 @@ export function issueToken(id) {
   var signOptions = {
     expiresIn: "3h",
   };
-  return jsonwebtoken.sign({ id: id }, process.env.JWT_SECRET, signOptions);
+  return jwt.sign({ id: id }, process.env.JWT_SECRET, signOptions);
 }

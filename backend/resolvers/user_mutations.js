@@ -12,7 +12,7 @@ export const usersMutationResolver = {
       let user = await context.dataSources.db.getUserByEmail(args.email);
       if (!user)
         throw new UserInputError(
-          "There is no user registered with this EMail!"
+          "There is no user registered with this Email!"
         );
       let isPasswordCorrect = await hashing.compare(
         args.password,
@@ -29,7 +29,7 @@ export const usersMutationResolver = {
       if (!isPasswordStrong(args.password))
         throw new UserInputError("Password must be atleast 8 characters!");
       let encryptedPassword = await hashing.hash(args.password);
-      let user = context.dataSources.db.addnewUser({
+      let user = await context.dataSources.db.addNewUser({
         name: args.name,
         email: args.email,
         password: encryptedPassword,

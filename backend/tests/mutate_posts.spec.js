@@ -15,7 +15,7 @@ beforeEach(() => {
 
   let user = new User({
     name: "Peter",
-    email: "peter@widerstand-der-penguine.ev",
+    email: "peter@widerstand-der-pinguin.ev",
     password: "hashed",
     id: "1",
   });
@@ -55,14 +55,14 @@ describe("mutations", () => {
       expect(db.postsData).toHaveLength(1);
     });
 
-    it("calls db.addnewPost", async () => {
-      db.addnewPost = jest.fn(() => {});
+    it("calls db.addBewPost", async () => {
+      db.addNewPost = jest.fn(() => {});
       await action();
-      expect(db.addnewPost).toHaveBeenCalledWith({
+      expect(db.addNewPost).toHaveBeenCalledWith({
         title: "Some post",
         author: {
           name: "Peter",
-          email: "peter@widerstand-der-penguine.ev",
+          email: "peter@widerstand-der-pinguin.ev",
           password: "hashed",
           id: "1",
         },
@@ -114,8 +114,8 @@ describe("UPVOTE", () => {
   });
 
   describe("given posts in the database", () => {
-    beforeEach(() => {
-      db.addnewPost({
+    beforeEach(async () => {
+      await db.addNewPost({
         title: "Pinguine sind keine Vögel",
         author: db.usersData[0],
         id,
@@ -132,7 +132,7 @@ describe("UPVOTE", () => {
       await action();
       expect(db.upvote).toHaveBeenCalledWith(id, {
         name: "Peter",
-        email: "peter@widerstand-der-penguine.ev",
+        email: "peter@widerstand-der-pinguin.ev",
         password: "hashed",
         id: "1",
       });

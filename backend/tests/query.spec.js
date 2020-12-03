@@ -43,7 +43,7 @@ describe("queries", () => {
       beforeEach(() => {
         let user = new User({
           name: "Peter",
-          email: "peter@widerstand-der-penguine.ev",
+          email: "peter@widerstand-der-pinguin.ev",
           password: "hashed",
           id: "1",
         });
@@ -175,7 +175,7 @@ describe("queries", () => {
       beforeEach(() => {
         let user = new User({
           name: "Peter",
-          email: "peter@widerstand-der-penguine.ev",
+          email: "peter@widerstand-der-pinguin.ev",
           password: "hashed",
           id: "1",
         });

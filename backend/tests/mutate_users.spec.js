@@ -2,77 +2,133 @@ import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
 import { MemoryDataSource } from "../db";
-
+import { verifyToken } from "../services/jwt.js";
+import { hash } from "../services/hashing.js";
 let mutate = undefined;
 let db = undefined;
 
 beforeEach(() => {
   db = new MemoryDataSource();
   const server = new Server({ dataSources: () => ({ db }) });
+
   let testClient = createTestClient(server);
   mutate = testClient.mutate;
 });
 
 describe("mutations", () => {
   describe("SIGNUP", () => {
-    const actionWithParam = (name, email, password) =>
+    const action = (name, email, password) =>
       mutate({
         mutation: SIGNUP,
         variables: {
-          post: { name: name, email: email, password: password },
+          name: name,
+          email: email,
+          password: password,
         },
       });
-    const action = () =>
-      actionWithParam("AzureDiamond", "AzureDiamond@fake.com", "hunter2");
     const SIGNUP = gql`
       mutation($name: String!, $email: String!, $password: String!) {
-        write(name: $name, email: $email, password: $password) {
-          jwt
-        }
+        signup(name: $name, email: $email, password: $password)
       }
     `;
-    it("return null if password < 8 characters", () => {
-      fail("TODO");
+    it("raises and error if password < 8 characters", async () => {
+      const {
+        data: { signup },
+        errors: [error],
+      } = await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin");
+      expect(signup).toBeNull();
+      expect(error.message).toEqual("Password must be atleast 8 characters!");
     });
 
-    it("return null if email is taken", () => {
-      fail("TODO");
+    it("raises and error if email is taken", async () => {
+      await db.addNewUser({
+        name: "Peter's Bruder",
+        email: "peter@widerstand-der-pinguine.ev",
+        password: "hashed",
+      });
+      const {
+        data: { signup },
+        errors: [error],
+      } = await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin");
+      expect(signup).toBeNull();
+      expect(error.message).toEqual("Email already exists!");
     });
-    it("return a JWT if password > 8 characters and email is free", () => {
-      fail("TODO");
+    it("return a JWT if password > 8 characters and email is free", async () => {
+      const {
+        data: { signup },
+        errors,
+      } = await action(
+        "Peter",
+        "peter@widerstand-der-pinguine.ev",
+        "P1nGu1n3S1nDk31n3Voeg3l"
+      );
+      expect(errors).toBeUndefined();
+      let verified = verifyToken(signup);
+      expect(verified).toEqual({
+        exp: expect.anything(),
+        iat: expect.anything(),
+        id: expect.any(String),
+      });
     });
   });
 
   describe("LOGIN", () => {
-    const actionWithParam = (email, password) =>
+    const action = (email, password) =>
       mutate({
         mutation: LOGIN,
         variables: {
-          post: { email: email, password: password },
+          email: email,
+          password: password,
         },
       });
-    const action = () => actionWithParam("AzureDiamond@fake.com", "hunter2");
     const LOGIN = gql`
       mutation($email: String!, $password: String!) {
-        write(email: $email, password: $password) {
-          jwt
-        }
+        login(email: $email, password: $password)
       }
     `;
-    it("if the user does not exist, return null", async () => {
-      fail("TODO");
+    it("raises and error if the user doesn't exist", async () => {
+      const {
+        data: { login },
+        errors: [error],
+      } = await action("A", "B");
+      expect(login).toBeNull();
+      expect(error.message).toEqual(
+        "There is no user registered with this Email!"
+      );
     });
 
     describe("given the user exists", () => {
-      beforeEach(() => {
-        //TODO add user
+      const password = "secure_password";
+      beforeEach(async () => {
+        await db.addNewUser({
+          name: "Peter",
+          email: "peter@widerstand-der-pinguine.ev",
+          password: await hash(password),
+          id: "1",
+        });
       });
 
-      it("returns a valid JWT if password matches", () => {
-        fail("TODO");
+      it("raises and error if password doesn't match", async () => {
+        const {
+          data: { login },
+          errors: [error],
+        } = await action("peter@widerstand-der-pinguine.ev", "pinguin");
+        expect(login).toBeNull();
+        expect(error.message).toEqual("Password did not match!");
       });
-      it("returns null if password doesn't match", () => {
-        fail("TODO");
+
+      it("returns a valid JWT if password matches", async () => {
+        const {
+          data: { login },
+          errors,
+        } = await action("peter@widerstand-der-pinguine.ev", password);
+        expect(errors).toBeUndefined();
+        let verified = verifyToken(login);
+        expect(verified).toEqual({
+          exp: expect.anything(),
+          iat: expect.anything(),
+          id: "1",
+        });
       });
     });
   });
