@@ -1,4 +1,3 @@
-// Rules
 import { rule, shield, allow } from "graphql-shield";
 
 const isAuthenticated = rule({ cache: "contextual" })(
