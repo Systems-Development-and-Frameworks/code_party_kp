@@ -32,12 +32,12 @@ describe("mutations", () => {
       }
     `;
     it("raises and error if password < 8 characters", async () => {
-      const {
-        data: { signup },
-        errors: [error],
-      } = await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin");
-      expect(signup).toBeNull();
-      expect(error.message).toEqual("Password must be atleast 8 characters!");
+      expect(
+        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+      ).toMatchObject({
+        data: { signup: null },
+        errors: [{ message: "Password must be atleast 8 characters!" }],
+      });
     });
 
     it("raises and error if email is taken", async () => {
@@ -46,12 +46,12 @@ describe("mutations", () => {
         email: "peter@widerstand-der-pinguine.ev",
         password: "hashed",
       });
-      const {
-        data: { signup },
-        errors: [error],
-      } = await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin");
-      expect(signup).toBeNull();
-      expect(error.message).toEqual("Email already exists!");
+      expect(
+        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+      ).toMatchObject({
+        data: { signup: null },
+        errors: [{ message: "Email already exists!" }],
+      });
     });
     it("return a JWT if password > 8 characters and email is free", async () => {
       const {
@@ -87,14 +87,10 @@ describe("mutations", () => {
       }
     `;
     it("raises and error if the user doesn't exist", async () => {
-      const {
-        data: { login },
-        errors: [error],
-      } = await action("A", "B");
-      expect(login).toBeNull();
-      expect(error.message).toEqual(
-        "There is no user registered with this Email!"
-      );
+      expect(await action("A", "B")).toMatchObject({
+        data: { login: null },
+        errors: [{ message: "There is no user registered with this Email!" }],
+      });
     });
 
     describe("given the user exists", () => {
@@ -109,12 +105,12 @@ describe("mutations", () => {
       });
 
       it("raises and error if password doesn't match", async () => {
-        const {
-          data: { login },
-          errors: [error],
-        } = await action("peter@widerstand-der-pinguine.ev", "pinguin");
-        expect(login).toBeNull();
-        expect(error.message).toEqual("Password did not match!");
+        expect(
+          await action("peter@widerstand-der-pinguine.ev", "pinguin")
+        ).toMatchObject({
+          data: { login: null },
+          errors: [{ message: "Password did not match!" }],
+        });
       });
 
       it("returns a valid JWT if password matches", async () => {
