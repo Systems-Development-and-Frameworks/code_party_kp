@@ -2,11 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest --colors",
-    "dev": "nodemon -r esm index.js",
-    "lint": "./node_modules/.bin/eslint ."
+    "dev": "nodemon -r esm src/index.js",
+    "lint": "./node_modules/.bin/eslint src"
   },
   "keywords": [],
   "author": "",
