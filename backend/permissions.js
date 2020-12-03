@@ -2,9 +2,9 @@
 import { rule, shield, allow } from "graphql-shield";
 
 const isAuthenticated = rule({ cache: "contextual" })(
-  async (parent, args, { dataSources }, info) => {
-    //TODO
-    return true;
+  async (_parent, _args, { dataSources, id }) => {
+    let exists = dataSources.db.userExists(id);
+    return exists;
   }
 );
 

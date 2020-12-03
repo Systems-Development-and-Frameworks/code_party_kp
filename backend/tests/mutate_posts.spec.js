@@ -55,7 +55,7 @@ describe("mutations", () => {
       expect(db.postsData).toHaveLength(1);
     });
 
-    it("calls db.addBewPost", async () => {
+    it("calls db.addNewPost", async () => {
       db.addNewPost = jest.fn(() => {});
       await action();
       expect(db.addNewPost).toHaveBeenCalledWith({
