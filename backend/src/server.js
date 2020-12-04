@@ -11,12 +11,6 @@ import { usersMutationResolver } from "./resolvers/user_mutations";
 import { queryResolver } from "./resolvers/query_all";
 
 const db = new MemoryDataSource();
-//add some dummy data
-//TODO
-// db.addnewPost({
-//   title: "Pinguine sind keine Vögel",
-//   author: { name: "Peter", email: "peter@gmail.com" },
-// });
 
 const dataSources = () => ({ db });
 
