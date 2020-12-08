@@ -36,7 +36,7 @@ describe("mutations", () => {
         await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
       ).toMatchObject({
         data: { signup: null },
-        errors: [{ message: "Password must be atleast 8 characters!" }],
+        errors: [{ message: "Password must be at least 8 characters long!" }],
       });
     });
 

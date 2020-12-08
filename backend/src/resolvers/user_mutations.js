@@ -27,7 +27,7 @@ export const usersMutationResolver = {
       let emailExists = await context.dataSources.db.emailExists(args.email);
       if (emailExists) throw new UserInputError("Email already exists!");
       if (!isPasswordStrong(args.password))
-        throw new UserInputError("Password must be atleast 8 characters!");
+        throw new UserInputError("Password must be at least 8 characters long!");
       let encryptedPassword = await hashing.hash(args.password);
       let user = await context.dataSources.db.addNewUser({
         name: args.name,
