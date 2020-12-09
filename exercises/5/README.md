@@ -24,6 +24,8 @@ You can choose between two different architectures:
 installation instructions in the `README.md` and explain why you have chosen the
 architecture based on your use-case. Be creative.
 
+Our Answer: Why did we choose the Neo4J and neo4j-graphql-js? The Lyon's presentation convinced us to use and learn about this interesting technology. A similar use case like our WebApp was explained very well in the lecture and we would like to go deeper into this technology to understand how our application can look like using the graphs. It is also very interesting to see how the elements of the application depend on each other. This technology is new for all members, so we would like to explore it further. Regarding our use case: Our data can be represented very clearly with Neo4J. The data can be visualised and explored very well with Neo4J.
+
 2. If you require API keys (e.g. [Remote API](#using-a-remote-graphqlrest-api)
 scenario), put them into a `.env` file and encrypt this file with [git-crypt](https://github.com/AGWA/git-crypt).
 Do the following:
