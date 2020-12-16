@@ -1,15 +1,15 @@
 export const postsMutationResolver = {
   Mutation: {
-    write: async (parent, _args, context) => {
+    write: async (parent, args, context) => {
       let user = await context.dataSources.db.getUserById(context.id);
       return await context.dataSources.db.addNewPost({
-        ..._args.post,
+        ...args.post,
         author: user,
       });
     },
-    upvote: async (parent, _args, context) => {
+    upvote: async (parent, args, context) => {
       let user = await context.dataSources.db.getUserById(context.id);
-      return context.dataSources.db.upvote(_args.id, user);
+      return context.dataSources.db.upvote(args.id, user);
     },
   },
 };
