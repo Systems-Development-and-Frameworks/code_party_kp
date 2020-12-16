@@ -3,10 +3,10 @@ import { gql } from "apollo-server";
 import Server from "./server";
 import { MemoryDataSource, User } from "./db";
 
-let mutate = undefined;
-let query = undefined;
-let db = undefined;
-let server = undefined;
+let mutate;
+let query;
+let db;
+let server;
 beforeEach(() => {
   db = new MemoryDataSource();
   server = new Server({ dataSources: () => ({ db }) });
@@ -14,16 +14,17 @@ beforeEach(() => {
   mutate = testClient.mutate;
   query = testClient.query;
 
-  let user = new User({
-    name: "Peter",
-    email: "peter@widerstand-der-pinguin.ev",
-    password: "hashed",
-    id: "1",
-  });
-  db.usersData.push(user);
+  db.usersData.push(
+    new User({
+      name: "Peter",
+      email: "peter@widerstand-der-pinguin.ev",
+      password: "hashed",
+      id: "1",
+    })
+  );
 });
-describe("Accessing", () => {
-  describe("protected", () => {
+describe("Mutation", () => {
+  describe("write", () => {
     const action = () =>
       mutate({
         mutation: WRITE_POST,
@@ -37,7 +38,7 @@ describe("Accessing", () => {
       }
     `;
 
-    it("fails if id is not specified", async () => {
+    it("throws `Not Authorised` if not authenticated", async () => {
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
         data: {
@@ -46,7 +47,7 @@ describe("Accessing", () => {
       });
     });
 
-    it("fails if id is not in database", async () => {
+    it("throws `Not Authorised` if JWT is valid but user has been deleted", async () => {
       server.context = () => ({ id: "not-in-db" });
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
@@ -55,7 +56,7 @@ describe("Accessing", () => {
         },
       });
     });
-    it("succeeds if id is in the database", async () => {
+    it("responds with created post if user is authenticated", async () => {
       server.context = () => ({ id: "1" });
       await expect(action()).resolves.toMatchObject({
         errors: undefined,
@@ -71,11 +72,7 @@ describe("Accessing", () => {
       const action = (name, email, password) =>
         mutate({
           mutation: SIGNUP,
-          variables: {
-            name: name,
-            email: email,
-            password: password,
-          },
+          variables: { name, email, password },
         });
       const SIGNUP = gql`
         mutation($name: String!, $email: String!, $password: String!) {
@@ -104,7 +101,7 @@ describe("Accessing", () => {
           }
         }
       `;
-      it("succeeds without authentication information for query", async () => {
+      it("responds with array of users", async () => {
         await expect(query({ query: USERS })).resolves.toMatchObject({
           errors: undefined,
           data: { users: [{ name: "Peter" }] },

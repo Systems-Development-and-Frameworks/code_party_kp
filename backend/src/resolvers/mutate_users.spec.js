@@ -4,6 +4,7 @@ import Server from "../server";
 import { MemoryDataSource } from "../db";
 import { verifyToken } from "../services/jwt.js";
 import { hash } from "../services/hashing.js";
+
 let mutate = undefined;
 let db = undefined;
 
@@ -40,7 +41,7 @@ describe("mutations", () => {
       });
     });
 
-    it("raises and error if email is taken", async () => {
+    it("raises an error if email is taken", async () => {
       await db.addNewUser({
         name: "Peter's Bruder",
         email: "peter@widerstand-der-pinguine.ev",
@@ -65,8 +66,8 @@ describe("mutations", () => {
       expect(errors).toBeUndefined();
       let verified = verifyToken(signup);
       expect(verified).toEqual({
-        exp: expect.anything(),
-        iat: expect.anything(),
+        exp: expect.any(Number),
+        iat: expect.any(Number),
         id: expect.any(String),
       });
     });

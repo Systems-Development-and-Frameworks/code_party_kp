@@ -1,10 +1,14 @@
 import { DataSource } from "apollo-datasource";
 import crypto from "crypto";
+const hashing = require("./services/hashing.js");
 
 export class User {
   constructor(data) {
     this.id = crypto.randomBytes(16).toString("hex");
     Object.assign(this, data);
+  }
+  async checkPassword(password) {
+    return await hashing.compare(password, this.password);
   }
 }
 export class Post {
@@ -54,7 +58,7 @@ export class MemoryDataSource extends DataSource {
   }
 
   async getUserByEmail(email) {
-    return this.usersData.find((x) => x.email == email);
+    return this.usersData.find((x) => x.email === email);
   }
 
   async userExists(id) {
@@ -70,7 +74,7 @@ export class MemoryDataSource extends DataSource {
   }
 
   async upvote(id, voter) {
-    let postIndex = this.postsData.findIndex((x) => x.id == id);
+    let postIndex = this.postsData.findIndex((x) => x.id === id);
     if (postIndex != -1) {
       const currentPost = this.postsData[postIndex];
       currentPost.voters.add(voter.id);
