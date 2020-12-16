@@ -2,16 +2,13 @@ import { DataSource } from "apollo-datasource";
 import crypto from "crypto";
 const hashing = require("./services/hashing.js");
 
-export class User  {
+export class User {
   constructor(data) {
     this.id = crypto.randomBytes(16).toString("hex");
     Object.assign(this, data);
   }
-  checkPassword(password){
-    return hashing.compare(
-      password,
-      this.password
-    );
+  async checkPassword(password) {
+    return await hashing.compare(password, this.password);
   }
 }
 export class Post {

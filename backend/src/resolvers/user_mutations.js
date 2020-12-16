@@ -14,7 +14,7 @@ export const usersMutationResolver = {
         throw new UserInputError(
           "There is no user registered with this Email!"
         );
-      const isPasswordCorrect = user.checkPassword(args.password);
+      const isPasswordCorrect = await user.checkPassword(args.password);
       if (!isPasswordCorrect)
         throw new AuthenticationError("Password did not match!");
       return jwt.issueToken(user.id);
@@ -24,8 +24,10 @@ export const usersMutationResolver = {
       let emailExists = await context.dataSources.db.emailExists(args.email);
       if (emailExists) throw new UserInputError("Email already exists!");
       if (!isPasswordStrong(args.password))
-        throw new UserInputError("Password must be at least 8 characters long!");
-      let encryptedPassword = hashing.hash(args.password);
+        throw new UserInputError(
+          "Password must be at least 8 characters long!"
+        );
+      let encryptedPassword = await hashing.hash(args.password);
       let user = await context.dataSources.db.addNewUser({
         name: args.name,
         email: args.email,

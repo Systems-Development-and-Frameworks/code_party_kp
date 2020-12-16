@@ -100,7 +100,7 @@ describe("mutations", () => {
         await db.addNewUser({
           name: "Peter",
           email: "peter@widerstand-der-pinguine.ev",
-          password: hash(password),
+          password: await hash(password),
           id: "1",
         });
       });
