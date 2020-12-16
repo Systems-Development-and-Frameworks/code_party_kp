@@ -1,7 +1,7 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
-import Server from "../server";
-import { MemoryDataSource, User } from "../db";
+import Server from "./server";
+import { MemoryDataSource, User } from "./db";
 
 let mutate = undefined;
 let query = undefined;
