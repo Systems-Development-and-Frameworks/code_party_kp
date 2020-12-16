@@ -44,7 +44,7 @@ describe("Mutation", () => {
       });
     });
 
-    it("fails if id is not in database", async () => {
+    it("throws `Not Authorised` if JWT is valid but user has been deleted', async () => {
       server.context = () => ({ id: "not-in-db" });
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
