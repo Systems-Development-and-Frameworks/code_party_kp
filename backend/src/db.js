@@ -68,7 +68,7 @@ export class MemoryDataSource extends DataSource {
   }
 
   async upvote(id, voter) {
-    let postIndex = this.postsData.findIndex((x) => x.id == id);
+    let postIndex = this.postsData.findIndex((x) => x.id === id);
     if (postIndex != -1) {
       const currentPost = this.postsData[postIndex];
       currentPost.voters.add(voter.id);
