@@ -41,7 +41,7 @@ describe("mutations", () => {
       });
     });
 
-    it("raises and error if email is taken", async () => {
+    it("raises an error if email is taken", async () => {
       await db.addNewUser({
         name: "Peter's Bruder",
         email: "peter@widerstand-der-pinguine.ev",
