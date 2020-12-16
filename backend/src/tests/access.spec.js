@@ -66,14 +66,10 @@ describe("Mutation", () => {
 
   describe("unprotected", () => {
     describe("mutation", () => {
-      const action = (name, email, password) =>
+      const action = ({ name, email, password }) =>
         mutate({
           mutation: SIGNUP,
-          variables: {
-            name: name,
-            email: email,
-            password: password,
-          },
+          variables: { name, email, password },
         });
       const SIGNUP = gql`
         mutation($name: String!, $email: String!, $password: String!) {
