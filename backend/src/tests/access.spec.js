@@ -53,7 +53,7 @@ describe("Mutation", () => {
         },
       });
     });
-    it("succeeds if id is in the database", async () => {
+    it("responds with created post if user is authenticated', async () => {
       server.context = () => ({ id: "1" });
       await expect(action()).resolves.toMatchObject({
         errors: undefined,
