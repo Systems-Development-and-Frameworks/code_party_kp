@@ -3,10 +3,10 @@ import { gql } from "apollo-server";
 import Server from "../server";
 import { MemoryDataSource, User } from "../db";
 
-let mutate = undefined;
-let query = undefined;
-let db = undefined;
-let server = undefined;
+let mutate;
+let query;
+let db;
+let server;
 beforeEach(() => {
   db = new MemoryDataSource();
   server = new Server({ dataSources: () => ({ db }) });
