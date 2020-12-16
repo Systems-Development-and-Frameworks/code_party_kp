@@ -98,7 +98,7 @@ describe("Mutation", () => {
           }
         }
       `;
-      it("succeeds without authentication information for query", async () => {
+      it("responds with array of users", async () => {
         await expect(query({ query: USERS })).resolves.toMatchObject({
           errors: undefined,
           data: { users: [{ name: "Peter" }] },
