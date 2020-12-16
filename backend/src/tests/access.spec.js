@@ -11,7 +11,8 @@ beforeEach(() => {
   db = new MemoryDataSource();
   server = new Server({ dataSources: () => ({ db }) });
   let testClient = createTestClient(server);
-  ({ mutate, query }) = testClient;
+  mutate = testClient.mutate;
+  query = testClient.query;
 
    db.usersData.push(new User({
     name: "Peter",
