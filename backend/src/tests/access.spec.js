@@ -13,13 +13,12 @@ beforeEach(() => {
   let testClient = createTestClient(server);
   ({ mutate, query }) = testClient;
 
-  let user = new User({
+   db.usersData.push(new User({
     name: "Peter",
     email: "peter@widerstand-der-pinguin.ev",
     password: "hashed",
     id: "1",
-  });
-  db.usersData.push(user);
+  }));
 });
 describe("Mutation", () => {
   describe("write", () => {
