@@ -8,7 +8,7 @@ export function verifyToken(token) {
 }
 
 export function issueToken(id) {
-  var signOptions = {
+  const signOptions = {
     expiresIn: "3h",
   };
   return jwt.sign({ id: id }, process.env.JWT_SECRET, signOptions);
