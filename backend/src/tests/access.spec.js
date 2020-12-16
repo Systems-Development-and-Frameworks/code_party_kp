@@ -21,8 +21,8 @@ beforeEach(() => {
   });
   db.usersData.push(user);
 });
-describe("Accessing", () => {
-  describe("protected", () => {
+describe("Mutation", () => {
+  describe("write", () => {
     const action = () =>
       mutate({
         mutation: WRITE_POST,
