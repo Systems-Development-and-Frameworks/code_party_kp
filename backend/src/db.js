@@ -10,9 +10,11 @@ export class User {
 export class Post {
   constructor(data) {
     this.id = crypto.randomBytes(16).toString("hex");
-    this.votes = 0;
     this.voters = new Set();
     Object.assign(this, data);
+  }
+  get votes(){
+    return this.voters.size;
   }
 }
 
@@ -72,7 +74,6 @@ export class MemoryDataSource extends DataSource {
     if (postIndex != -1) {
       const currentPost = this.postsData[postIndex];
       currentPost.voters.add(voter.id);
-      currentPost.votes = currentPost.voters.size;
       return currentPost;
     }
     return undefined;
