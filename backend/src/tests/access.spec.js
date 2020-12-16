@@ -80,16 +80,19 @@ describe("Mutation", () => {
         }
       `;
       it("succeeds without authentication information for mutate", async () => {
-        const {
-          data: { signup },
-          errors,
-        } = await action(
+         await expect(action(
           "Peter",
           "peter@widerstand-der-pinguine.ev",
           "P1nGu1n3S1nDk31n3Voeg3l"
+        )).resolves.toMatchObject(
+          {
+            data: {
+              signup: expect.any(String)
+            },
+            errors: undefined,
+          }
         );
-        expect(errors).toBeUndefined();
-        expect(signup).toEqual(expect.any(String));
+
       });
     });
 
