@@ -52,7 +52,7 @@ export class MemoryDataSource extends DataSource {
   }
 
   async getUserByEmail(email) {
-    return this.usersData.find((x) => x.email == email);
+    return this.usersData.find((x) => x.email === email);
   }
 
   async userExists(id) {
