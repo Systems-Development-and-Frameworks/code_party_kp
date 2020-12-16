@@ -4,6 +4,7 @@ import Server from "../server";
 import { MemoryDataSource } from "../db";
 import { verifyToken } from "../services/jwt.js";
 import { hash } from "../services/hashing.js";
+
 let mutate = undefined;
 let db = undefined;
 
@@ -99,7 +100,7 @@ describe("mutations", () => {
         await db.addNewUser({
           name: "Peter",
           email: "peter@widerstand-der-pinguine.ev",
-          password: await hash(password),
+          password: hash(password),
           id: "1",
         });
       });
