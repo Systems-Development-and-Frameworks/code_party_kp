@@ -69,7 +69,7 @@ describe("Mutation", () => {
 
   describe("unprotected", () => {
     describe("mutation", () => {
-      const action = ({ name, email, password }) =>
+      const action = (name, email, password) =>
         mutate({
           mutation: SIGNUP,
           variables: { name, email, password },
