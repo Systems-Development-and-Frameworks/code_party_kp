@@ -14,12 +14,14 @@ beforeEach(() => {
   mutate = testClient.mutate;
   query = testClient.query;
 
-   db.usersData.push(new User({
-    name: "Peter",
-    email: "peter@widerstand-der-pinguin.ev",
-    password: "hashed",
-    id: "1",
-  }));
+  db.usersData.push(
+    new User({
+      name: "Peter",
+      email: "peter@widerstand-der-pinguin.ev",
+      password: "hashed",
+      id: "1",
+    })
+  );
 });
 describe("Mutation", () => {
   describe("write", () => {
@@ -36,7 +38,7 @@ describe("Mutation", () => {
       }
     `;
 
-    it("throws `Not Authorised` if not authenticated', async () => {
+    it("throws `Not Authorised` if not authenticated", async () => {
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
         data: {
@@ -45,7 +47,7 @@ describe("Mutation", () => {
       });
     });
 
-    it("throws `Not Authorised` if JWT is valid but user has been deleted', async () => {
+    it("throws `Not Authorised` if JWT is valid but user has been deleted", async () => {
       server.context = () => ({ id: "not-in-db" });
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
@@ -54,7 +56,7 @@ describe("Mutation", () => {
         },
       });
     });
-    it("responds with created post if user is authenticated', async () => {
+    it("responds with created post if user is authenticated", async () => {
       server.context = () => ({ id: "1" });
       await expect(action()).resolves.toMatchObject({
         errors: undefined,
