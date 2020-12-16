@@ -1,13 +1,10 @@
 name: "CI"
 
-on: [push, pull_request]
-defaults:
-  run:
-    working-directory: ./backend/
+on: [push]
 
 jobs:
-    test:
-      name: test
+    test_backend:
+      name: backend:test
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -21,9 +18,10 @@ jobs:
       - run: |
               npm install
               npm run test
+        working-directory: ./backend/
     
-    lint:
-      name: lint
+    lint_backend:
+      name: backend:lint
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -37,3 +35,38 @@ jobs:
       - run: |
               npm install
               npm run lint
+        working-directory: ./backend/
+
+    test_webapp:
+      name: webapp:test
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [14.x]
+
+      steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+              npm install
+              npm run test
+        working-directory: ./webapp/
+    
+    lint_webapp:
+      name: webapp:lint
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [14.x]
+
+      steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+              npm install
+              npm run lint
+        working-directory: ./webapp/
