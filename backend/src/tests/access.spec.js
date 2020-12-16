@@ -35,7 +35,7 @@ describe("Mutation", () => {
       }
     `;
 
-    it("fails if id is not specified", async () => {
+    it("throws `Not Authorised` if not authenticated', async () => {
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
         data: {
