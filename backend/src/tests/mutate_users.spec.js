@@ -66,8 +66,8 @@ describe("mutations", () => {
       expect(errors).toBeUndefined();
       let verified = verifyToken(signup);
       expect(verified).toEqual({
-        exp: expect.anything(),
-        iat: expect.anything(),
+        exp: expect.any(Number),
+        iat: expect.any(Number),
         id: expect.any(String),
       });
     });
