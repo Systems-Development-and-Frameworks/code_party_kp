@@ -43,5 +43,22 @@ brew install neo4j
 2. Once the installation has finished, you can launch it via
 ```bash
 neo4j start
+neo4j stop
 ```
 3. Navigate to `http://localhost:7474/` to verify it is indeed running
+4. Install some important packages:
+```bash
+npm install --save neo4j-graphql-js
+npm install @graphql-tools/stitch
+npm install neo4j-driver
+```
+5. create a environment config file backend/.env with following credentials:
+```bash
+JWT_SECRET=SECRET_1234
+NEO4J_USERNAME=NEO4J
+NEO4J_PASSWORD=NEO4J
+```
+6. Start the application:
+- neo4j start
+- npm run dev
+- launch http://localhost:4000/

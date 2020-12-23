@@ -6,6 +6,7 @@ function isPasswordStrong(password) {
   return password.length >= 8;
 }
 
+//TODO make it in neo4jgraphql
 export const usersMutationResolver = {
   Mutation: {
     login: async (parent, args, context) => {
