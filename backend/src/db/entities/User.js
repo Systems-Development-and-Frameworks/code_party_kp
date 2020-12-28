@@ -1,4 +1,3 @@
-import { DataSource } from "apollo-datasource";
 import crypto from "crypto";
 import neode from "../neode";
 const hashing = require("../../services/hashing.js");
@@ -17,14 +16,12 @@ export default class User {
     let encryptedPassword = await hashing.hash(password);
     this.password = encryptedPassword;
     const node = await neode.create("User", this);
-    //TODO @Anton check what node means here
     Object.assign(this, { ...node.properties(), node });
     return this;
   }
   static async first(props) {
     const node = await neode.first("User", props);
     if (!node) return null;
-    //TODO @Anton check what node means here
     return new User({ ...node.properties(), node });
   }
 
