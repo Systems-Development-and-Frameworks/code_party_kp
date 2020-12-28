@@ -4,8 +4,6 @@ const hashing = require("../../services/hashing.js");
 
 export default class User {
   constructor(data) {
-    //TODO @Here can we still use it?
-    this.id = crypto.randomBytes(16).toString("hex");
     Object.assign(this, data);
   }
   async checkPassword(password) {
@@ -23,6 +21,7 @@ export default class User {
     const node = await neode.first("User", props);
     if (!node) return null;
     return new User({ ...node.properties(), node });
+   
   }
 
   static async exists(props) {

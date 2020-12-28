@@ -3,7 +3,6 @@ import crypto from "crypto";
 
 export default class Post {
   constructor(data) {
-    this.id = crypto.randomBytes(16).toString("hex");
     Object.assign(this, data);
   }
   get votes() {
