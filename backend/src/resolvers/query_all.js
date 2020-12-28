@@ -14,7 +14,9 @@ export default () => ({
   Post: {
     votes: {
       selectionSet: "{ voters { id } }",
-      resolve: (post) => post.voters?.length ?? 0,
+      resolve: (post) => {
+        return post.voters ? post.voters.length : 0;
+      },
     },
   },
 });
