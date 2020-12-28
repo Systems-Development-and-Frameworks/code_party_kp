@@ -1,3 +1,4 @@
+import neode from "./neode";
 import User from "./entities/User";
 import Post from "./entities/Post";
 
@@ -26,6 +27,16 @@ const seedData = async () => {
   await Promise.all(posts.map((post) => post.save()));
 };
 
-export default async function seed() {
+export async function seed() {
   await seedData();
+}
+
+export async function close() {
+  await neode.driver.close();
+}
+
+export async function clean() {
+  await neode.driver
+    .session()
+    .writeTransaction((txc) => txc.run("MATCH(n) DETACH DELETE n;"));
 }

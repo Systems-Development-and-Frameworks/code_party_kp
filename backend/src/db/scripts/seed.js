@@ -1,7 +1,6 @@
-import seed from "../seed";
-import neode from "../neode";
+import { seed, close } from "../db";
 
 (async () => {
   await seed();
-  await neode.driver.close();
+  await close();
 })();

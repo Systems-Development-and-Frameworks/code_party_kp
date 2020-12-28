@@ -1,7 +1,6 @@
-import clean from "../clean";
-import neode from "../neode";
+import { clean, close } from "../db";
 
 (async () => {
   await clean();
-  await neode.driver.close();
+  await close();
 })();

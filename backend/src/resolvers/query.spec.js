@@ -1,15 +1,20 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
-import clean from "../db/clean.js";
-import seed from "../db/seed.js";
+import { clean, seed, close } from "../db/db.js";
+import driver from "../driver";
 
 let server = new Server();
 let testClient = createTestClient(server);
 let query = testClient.query;
 
-beforeEach(() => {
-  clean();
+beforeAll(async () => {
+  await clean();
+});
+
+afterAll(async () => {
+  await close();
+  await driver.close();
 });
 
 describe("queries", () => {
@@ -38,8 +43,11 @@ describe("queries", () => {
     });
 
     describe("given users in the database", () => {
-      beforeEach(() => {
-        seed();
+      beforeAll(async () => {
+        await seed();
+      });
+      afterAll(async () => {
+        await clean();
       });
 
       it("returns users", async () => {
@@ -47,6 +55,10 @@ describe("queries", () => {
           errors: undefined,
           data: {
             users: [
+              {
+                name: "Peter's Bruder",
+                posts: [],
+              },
               {
                 name: "Peter",
                 posts: [
@@ -98,6 +110,10 @@ describe("queries", () => {
           errors: undefined,
           data: {
             users: [
+              {
+                name: "Peter's Bruder",
+                posts: [],
+              },
               {
                 name: "Peter",
                 posts: [
@@ -158,8 +174,11 @@ describe("queries", () => {
     });
 
     describe("given posts in the database", () => {
-      beforeEach(() => {
-        seed();
+      beforeAll(async () => {
+        await seed();
+      });
+      afterAll(async () => {
+        await clean();
       });
 
       it("returns posts", async () => {
