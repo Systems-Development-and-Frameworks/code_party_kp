@@ -1,6 +1,6 @@
 import { neo4jgraphql } from "neo4j-graphql-js";
 
-export const queryResolver = {
+export default ({ subschema }) => ({
   Query: {
     users: async (_parent, _args, context, resolveInfo) => {
       //return context.dataSources.db.users();
@@ -17,15 +17,4 @@ export const queryResolver = {
       return context.dataSources.db.getPosts(parent.id);
     },
   },
-};
-
-
-
-
-const resolvers = {
-  Query: {
-    Movie(object, params, ctx, resolveInfo) {
-      return neo4jgraphql(object, params, ctx, resolveInfo);
-    }
-  }
-};
+});

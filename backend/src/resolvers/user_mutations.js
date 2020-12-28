@@ -7,7 +7,7 @@ function isPasswordStrong(password) {
 }
 
 //TODO make it in neo4jgraphql
-export const usersMutationResolver = {
+export default ({ subschema }) => ({
   Mutation: {
     login: async (parent, args, context) => {
       let user = await context.dataSources.db.getUserByEmail(args.email);
@@ -37,4 +37,4 @@ export const usersMutationResolver = {
       return jwt.issueToken(user.id);
     },
   },
-};
+});

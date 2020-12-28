@@ -1,4 +1,4 @@
-export const postsMutationResolver = {
+export default ({ subschema }) => ({
   Mutation: {
     write: async (parent, args, context) => {
       let user = await context.dataSources.db.getUserById(context.id);
@@ -14,4 +14,4 @@ export const postsMutationResolver = {
       return context.dataSources.db.upvote(args.id, user);
     },
   },
-};
+});
