@@ -1,17 +1,15 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
-import { MemoryDataSource, User, Post } from "../db";
+import clean from "../db/clean.js";
+import seed from "../db/seed.js";
 
-let query = undefined;
-let server = undefined;
-let db = undefined;
+let server = new Server();
+let testClient = createTestClient(server);
+let query = testClient.query;
 
 beforeEach(() => {
-  db = new MemoryDataSource();
-  server = new Server({ dataSources: () => ({ db }) });
-  let testClient = createTestClient(server);
-  query = testClient.query;
+  clean();
 });
 
 describe("queries", () => {
@@ -41,19 +39,7 @@ describe("queries", () => {
 
     describe("given users in the database", () => {
       beforeEach(() => {
-        let user = new User({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguin.ev",
-          password: "hashed",
-          id: "1",
-        });
-        let post = new Post({
-          title: "Pinguine sind keine Vögel",
-          author: user,
-          id: "11",
-        });
-        db.usersData.push(user);
-        db.postsData.push(post);
+        seed();
       });
 
       it("returns users", async () => {
@@ -173,19 +159,7 @@ describe("queries", () => {
 
     describe("given posts in the database", () => {
       beforeEach(() => {
-        let user = new User({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguin.ev",
-          password: "hashed",
-          id: "1",
-        });
-        let post = new Post({
-          title: "Pinguine sind keine Vögel",
-          author: user,
-          id: "11",
-        });
-        db.usersData.push(user);
-        db.postsData.push(post);
+        seed();
       });
 
       it("returns posts", async () => {
