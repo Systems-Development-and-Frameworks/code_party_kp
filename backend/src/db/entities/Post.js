@@ -15,7 +15,7 @@ export default class Post {
     if (!(this.author && this.author.node))
       throw new Error("author node is missing!");
     const node = await neode.create("Post", this);
-    await node.relateTo(this.author.node, "wrote");
+    await node.relateTo(this.author.node, "author");
     Object.assign(this, { ...node.properties(), node });
     return this;
   }

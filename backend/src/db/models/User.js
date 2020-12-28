@@ -16,10 +16,4 @@ module.exports = {
     type: "string",
     required: true,
   },
-  posts: {
-    type: "relationship",
-    target: "Post",
-    relationship: "WROTE",
-    direction: "out",
-  },
 };

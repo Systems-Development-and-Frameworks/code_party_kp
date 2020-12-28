@@ -7,10 +7,11 @@ module.exports = {
     type: "string",
     required: true,
   },
-  votes: {
-    type: "integer",
-    required: true,
-  },
+  //TODO @Here
+  // votes: {
+  //   type: "integer",
+  //   required: true,
+  // },
   author: {
     type: "relationship",
     target: "User",

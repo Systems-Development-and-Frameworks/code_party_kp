@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --colors",
     "dev": "nodemon -r esm src/index.js",
-    "lint": "./node_modules/.bin/eslint src"
+    "lint": "./node_modules/.bin/eslint src",
+    "db:seed": "node -r esm src/db/scripts/seed.js",
+    "db:clean": "node -r esm src/db/scripts/clean.js"
   },
   "keywords": [],
   "author": "",
