@@ -30,11 +30,9 @@ export default class Post {
     C)  let post = Posts.first({id:id})
         post.upvote(voter)
     */
-  //TODO
   async upvote(voter) {
-    //    const currentPost = this.postsData[postIndex];
-    // currentPost.voters.add(voter.id);
-    //  return currentPost;
+    if (!(voter && voter.node)) throw new Error("voter node is missing!");
+    await this.node.relateTo(voter.node, "upvoted");
   }
 
   static async all() {

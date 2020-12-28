@@ -15,6 +15,8 @@ const typeDefs = gql`
     title: String!
     votes: Int!
     author: User! @relation(name: "WROTE", direction: "IN")
+
+    upvoted: [User] @relation(name: "UPVOTED_BY", direction: "OUT")
   }
 `;
 const schema = makeAugmentedSchema({ typeDefs });

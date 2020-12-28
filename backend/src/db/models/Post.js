@@ -18,4 +18,11 @@ module.exports = {
     relationship: "WROTE",
     direction: "in",
   },
+
+  upvoted: {
+    type: "relationship",
+    target: "User",
+    relationship: "UPVOTED_BY",
+    direction: "out",
+  },
 };
