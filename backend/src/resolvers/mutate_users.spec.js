@@ -4,19 +4,26 @@ import Server from "../server";
 import { MemoryDataSource } from "../db";
 import { verifyToken } from "../services/jwt.js";
 import { hash } from "../services/hashing.js";
+import { clean, close, seed } from "../db/db";
+import driver from "../driver";
 
-let mutate = undefined;
-let db = undefined;
 
-beforeEach(() => {
-  db = new MemoryDataSource();
-  const server = new Server({ dataSources: () => ({ db }) });
+let server = new Server();
+let testClient = createTestClient(server);
+let mutate = testClient.mutate;
 
-  let testClient = createTestClient(server);
-  mutate = testClient.mutate;
-});
+ 
 
 describe("mutations", () => {
+  beforeAll(async () => {
+    await clean();
+    await seed();
+  });
+  
+  afterAll(async () => {
+    await close()
+    await driver.close()
+  }); 
   describe("SIGNUP", () => {
     const action = (name, email, password) =>
       mutate({
@@ -34,7 +41,7 @@ describe("mutations", () => {
     `;
     it("raises and error if password < 8 characters", async () => {
       expect(
-        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+        await action("geogre", "geogre@widerstand-der-pinguine.ev", "pin")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Password must be at least 8 characters long!" }],
@@ -42,13 +49,8 @@ describe("mutations", () => {
     });
 
     it("raises an error if email is taken", async () => {
-      await db.addNewUser({
-        name: "Peter's Bruder",
-        email: "peter@widerstand-der-pinguine.ev",
-        password: "hashed",
-      });
       expect(
-        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+        await action("Peter", "peter@widerstand-der-pinguin.ev", "sldfjwrkkev")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Email already exists!" }],
@@ -59,9 +61,9 @@ describe("mutations", () => {
         data: { signup },
         errors,
       } = await action(
-        "Peter",
-        "peter@widerstand-der-pinguine.ev",
-        "P1nGu1n3S1nDk31n3Voeg3l"
+        "Geogre",
+        "geogre@widerstand-der-pinguine.ev",
+        "sfseltuowu3979fdk"
       );
       expect(errors).toBeUndefined();
       let verified = verifyToken(signup);
@@ -95,19 +97,9 @@ describe("mutations", () => {
     });
 
     describe("given the user exists", () => {
-      const password = "secure_password";
-      beforeEach(async () => {
-        await db.addNewUser({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguine.ev",
-          password: await hash(password),
-          id: "1",
-        });
-      });
-
       it("raises and error if password doesn't match", async () => {
         expect(
-          await action("peter@widerstand-der-pinguine.ev", "pinguin")
+          await action("peter@widerstand-der-pinguin.ev", "pinguin")
         ).toMatchObject({
           data: { login: null },
           errors: [{ message: "Password did not match!" }],
@@ -118,13 +110,13 @@ describe("mutations", () => {
         const {
           data: { login },
           errors,
-        } = await action("peter@widerstand-der-pinguine.ev", password);
+        } = await action("peter@widerstand-der-pinguin.ev", "hashed");
         expect(errors).toBeUndefined();
         let verified = verifyToken(login);
         expect(verified).toEqual({
           exp: expect.anything(),
           iat: expect.anything(),
-          id: "1",
+          id: "b5bc19f4-164e-49c3-8045-7105580b43be",
         });
       });
     });
