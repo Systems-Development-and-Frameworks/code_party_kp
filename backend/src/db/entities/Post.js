@@ -4,7 +4,6 @@ import crypto from "crypto";
 export default class Post {
   constructor(data) {
     this.id = crypto.randomBytes(16).toString("hex");
-    this.voters = new Set();
     Object.assign(this, data);
   }
   get votes() {
@@ -32,7 +31,7 @@ export default class Post {
     */
   async upvote(voter) {
     if (!(voter && voter.node)) throw new Error("voter node is missing!");
-    await this.node.relateTo(voter.node, "upvoted");
+    await this.node.relateTo(voter.node, "voters");
   }
 
   static async all() {

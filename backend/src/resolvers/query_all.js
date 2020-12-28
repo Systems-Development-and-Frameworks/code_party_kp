@@ -17,4 +17,11 @@ export default ({ subschema }) => ({
       return context.dataSources.db.getPosts(parent.id);
     },
   },
+  //TODO not tested yet
+  Post: {
+    votes: {
+      selectionSet: "{ voters { id } }",
+      resolve: (post) => post.voters.length,
+    },
+  },
 });

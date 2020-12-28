@@ -7,11 +7,7 @@ module.exports = {
     type: "string",
     required: true,
   },
-  //TODO @Here
-  // votes: {
-  //   type: "integer",
-  //   required: true,
-  // },
+
   author: {
     type: "relationship",
     target: "User",
@@ -19,7 +15,7 @@ module.exports = {
     direction: "in",
   },
 
-  upvoted: {
+  voters: {
     type: "relationship",
     target: "User",
     relationship: "UPVOTED_BY",

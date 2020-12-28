@@ -30,6 +30,10 @@ const typeDefs = gql`
   input PostInput {
     title: String!
   }
+
+  extend type Post {
+    votes: Int
+  }
 `;
 
 export default typeDefs;

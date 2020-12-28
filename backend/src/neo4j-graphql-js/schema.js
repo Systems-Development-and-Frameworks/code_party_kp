@@ -13,10 +13,8 @@ const typeDefs = gql`
   type Post {
     id: ID!
     title: String!
-    votes: Int!
     author: User! @relation(name: "WROTE", direction: "IN")
-
-    upvoted: [User] @relation(name: "UPVOTED_BY", direction: "OUT")
+    voters: [User] @relation(name: "UPVOTED_BY", direction: "OUT")
   }
 `;
 const schema = makeAugmentedSchema({ typeDefs });
