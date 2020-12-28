@@ -8,16 +8,16 @@ let server = new Server();
 let testClient = createTestClient(server);
 let query = testClient.query;
 
-beforeAll(async () => {
-  await clean();
-});
-
-afterAll(async () => {
-  await close();
-  await driver.close();
-});
-
 describe("queries", () => {
+  beforeAll(async () => {
+    await clean();
+  });
+
+  afterAll(async () => {
+    await close();
+    await driver.close();
+  });
+
   describe("USERS", () => {
     const USERS = gql`
       query {
