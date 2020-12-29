@@ -1,31 +1,30 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
-import { MemoryDataSource } from "../db";
 import { verifyToken } from "../services/jwt.js";
-import { hash } from "../services/hashing.js";
 import { clean, close, seed } from "../db/db";
 import driver from "../driver";
 
 
-let server = new Server();
-let testClient = createTestClient(server);
-let mutate = testClient.mutate;
-
- 
-
+let mutate
+beforeEach(async() => {
+  let server = new Server();
+  let testClient = createTestClient(server);
+  mutate = testClient.mutate;
+  await clean();
+  await seed();
+})
+afterAll(async () => {
+  await clean();
+  await close()
+  await driver.close()
+});
 describe("mutations", () => {
-  beforeAll(async () => {
-    await clean();
-    await seed();
-  });
-  
-  afterAll(async () => {
-    await close()
-    await driver.close()
-  }); 
   describe("SIGNUP", () => {
-    const action = (name, email, password) =>
+    beforeEach(async () => {
+    
+    });
+    const actionSIGNUP = (name, email, password) =>
       mutate({
         mutation: SIGNUP,
         variables: {
@@ -41,7 +40,7 @@ describe("mutations", () => {
     `;
     it("raises and error if password < 8 characters", async () => {
       expect(
-        await action("geogre", "geogre@widerstand-der-pinguine.ev", "pin")
+        await actionSIGNUP("geogre", "geogre@widerstand-der-pinguine.ev", "pin")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Password must be at least 8 characters long!" }],
@@ -50,7 +49,7 @@ describe("mutations", () => {
 
     it("raises an error if email is taken", async () => {
       expect(
-        await action("Peter", "peter@widerstand-der-pinguin.ev", "sldfjwrkkev")
+        await actionSIGNUP("Peter", "peter@widerstand-der-pinguin.ev", "sldfjwrkkev")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Email already exists!" }],
@@ -60,7 +59,7 @@ describe("mutations", () => {
       const {
         data: { signup },
         errors,
-      } = await action(
+      } = await actionSIGNUP(
         "Geogre",
         "geogre@widerstand-der-pinguine.ev",
         "sfseltuowu3979fdk"
@@ -76,7 +75,7 @@ describe("mutations", () => {
   });
 
   describe("LOGIN", () => {
-    const action = (email, password) =>
+    const actionLOGIN = (email, password) =>
       mutate({
         mutation: LOGIN,
         variables: {
@@ -90,7 +89,7 @@ describe("mutations", () => {
       }
     `;
     it("raises and error if the user doesn't exist", async () => {
-      expect(await action("A", "B")).toMatchObject({
+      expect(await actionLOGIN("A", "B")).toMatchObject({
         data: { login: null },
         errors: [{ message: "There is no user registered with this Email!" }],
       });
@@ -99,7 +98,7 @@ describe("mutations", () => {
     describe("given the user exists", () => {
       it("raises and error if password doesn't match", async () => {
         expect(
-          await action("peter@widerstand-der-pinguin.ev", "pinguin")
+          await actionLOGIN("peter@widerstand-der-pinguin.ev", "pinguin")
         ).toMatchObject({
           data: { login: null },
           errors: [{ message: "Password did not match!" }],
@@ -110,7 +109,7 @@ describe("mutations", () => {
         const {
           data: { login },
           errors,
-        } = await action("peter@widerstand-der-pinguin.ev", "hashed");
+        } = await actionLOGIN("peter@widerstand-der-pinguin.ev", "hashed");
         expect(errors).toBeUndefined();
         let verified = verifyToken(login);
         expect(verified).toEqual({

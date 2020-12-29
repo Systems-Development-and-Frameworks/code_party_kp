@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server";
 import typeDefs from "./typeDefs.js";
-import { MemoryDataSource } from "./db.js";
+
 import { permissions } from "./permissions.js";
 import { context } from "./context.js";
 import { applyMiddleware } from "graphql-middleware";
