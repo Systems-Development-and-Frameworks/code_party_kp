@@ -1,52 +1,47 @@
 import User from '../db/entities/User';
 import Post from '../db/entities/Post';
 import {
-  AuthenticationError,
-  UserInputError,
-  ForbiddenError,
-  delegateToSchema
+  ForbiddenError
 } from 'apollo-server';
+import { delegateToSchema } from '@graphql-tools/delegate';
+
 export default ({ subschema }) => ({
   Mutation: {
-    write: async (parent, args, context, info) => {
-      const {user} = context;
-      let currentUser = await User.first({id: user.id})
-      if(!currentUser)
-        throw new ForbiddenError("You must be authenticated to write a post")
-      const post = new Post({...args, author: currentUser});
+    write: async (parent, { title }, context, info) => {
+      let currentUser = await User.first({ id: context.id, })
+      if (!currentUser)
+        throw new ForbiddenError("You must be authenticated to write a post!")
+      const post = new Post({ title: title, author: currentUser });
       await post.save();
-      //TODO: need to use this?
-      // const [resolvedPost] = await delegateToSchema({
-      //   schema: subschema, 
-      //   operation: 'query',
-      //   fieldName: 'Post',
-      //   args: {id: post.id},
-      //   context,
-      //   info
-      // });
-      // return resolvedPost;
-      return post;
+      const [resolvedPost] = await delegateToSchema({
+        schema: subschema, 
+        operation: 'query',
+        fieldName: 'Post',
+        args: {id: post.id},
+        context,
+        info
+      });
+      return resolvedPost;
+      
+
     },
-    upvote: async (parent, args, context) => {
-      const {user} = context;
-      let currentUser = await User.first({id: user.id})
-      if(!currentUser)
-        throw new ForbiddenError("You must be authenticated to write a post");
-      const {post} = args;
-      let currentPost = await Post.first({id: post.id})
-      if(!currentPost) 
+    upvote: async (parent, args, context, info) => {
+     let currentUser = await User.first({ id: context.id})
+      if (!currentUser)
+        throw new ForbiddenError("You must be authenticated to upvote a post!");
+      let currentPost = await Post.first({ id: args.id })
+      if (!currentPost)
         throw new ForbiddenError("Dont found the post with this id")
       await currentPost.upvote(currentUser)
-      //TODO: need to use this?
-      // const [resolvedPost] = await delegateToSchema({
-      //   schema: subschema, 
-      //   operation: 'query',
-      //   fieldName: 'Post',
-      //   args: {id: post.id},
-      //   context,
-      //   info
-      // });
-      return currentPost;
+      const [resolvedPost] = await delegateToSchema({
+        schema: subschema, 
+        operation: 'query',
+        fieldName: 'Post',
+        args: {id: currentPost.id},
+        context,
+        info
+      });
+      return resolvedPost;
     },
   },
 });

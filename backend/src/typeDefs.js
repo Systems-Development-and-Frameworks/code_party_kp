@@ -9,7 +9,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    write(post: PostInput!): Post
+    write(title: String!): Post
     upvote(id: ID!): Post
     # 🚀 OPTIONAL
     # downvote(id: ID!): Post
@@ -26,11 +26,6 @@ const typeDefs = gql`
     """
     signup(name: String!, email: String!, password: String!): String
   }
-
-  input PostInput {
-    title: String!
-  }
-
   extend type Post {
     votes: Int
   }
