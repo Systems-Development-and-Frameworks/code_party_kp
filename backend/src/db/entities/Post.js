@@ -5,7 +5,6 @@ export default class Post {
   constructor(data) {
     Object.assign(this, data);
   }
- 
 
   async save() {
     if (!(this.author && this.author.node))
@@ -22,7 +21,6 @@ export default class Post {
     return new Post({ ...node.properties(), node });
   }
 
- 
   async upvote(voter) {
     if (!(voter && voter.node)) throw new Error("voter node is missing!");
     await this.node.relateTo(voter.node, "voters");

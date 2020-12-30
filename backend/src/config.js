@@ -1,4 +1,4 @@
-require('dotenv-flow').config();
+require("dotenv-flow").config();
 
 export const { JWT_SECRET, NEO4J_USERNAME, NEO4J_PASSWORD } = process.env;
 if (!(JWT_SECRET && NEO4J_USERNAME && NEO4J_PASSWORD)) {

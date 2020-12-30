@@ -21,7 +21,6 @@ export default class User {
     const node = await neode.first("User", props);
     if (!node) return null;
     return new User({ ...node.properties(), node });
-   
   }
 
   static async exists(props) {

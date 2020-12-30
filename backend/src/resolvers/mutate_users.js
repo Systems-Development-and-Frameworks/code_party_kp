@@ -1,4 +1,3 @@
-const hashing = require("../services/hashing.js");
 const jwt = require("../services/jwt.js");
 import { AuthenticationError, UserInputError } from "apollo-server";
 import User from "../db/entities/User";
@@ -7,10 +6,9 @@ function isPasswordStrong(password) {
   return password.length >= 8;
 }
 
-//TODO make it in neo4jgraphql
 export default ({ subschema }) => ({
   Mutation: {
-    login: async (parent, { email, password }, context) => {
+    login: async (_parent, { email, password }) => {
       const user = await User.first({ email });
       if (!user) {
         throw new UserInputError(
@@ -23,7 +21,7 @@ export default ({ subschema }) => ({
       return jwt.issueToken(user.id);
     },
 
-    signup: async (parent, { name, email, password }, context) => {
+    signup: async (_parent, { name, email, password }) => {
       let emailExists = await User.exists({ email });
       if (emailExists) throw new UserInputError("Email already exists!");
       if (!isPasswordStrong(password))
