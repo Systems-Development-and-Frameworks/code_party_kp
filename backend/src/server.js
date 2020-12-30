@@ -5,9 +5,9 @@ import { permissions } from "./permissions.js";
 import { context } from "./context.js";
 import { applyMiddleware } from "graphql-middleware";
 import { mergeResolvers } from "@graphql-tools/merge";
-import postsMutationResolver from "./resolvers/mutations_post";
-import usersMutationResolver from "./resolvers/user_mutations";
-import queryResolver from "./resolvers/query_all";
+import postsMutationResolver from "./resolvers/mutate_posts";
+import usersMutationResolver from "./resolvers/mutate_users";
+import queryResolver from "./resolvers/query";
 import { stitchSchemas } from "@graphql-tools/stitch";
 
 import neo4jSchema from "./neo4j-graphql-js/schema";
