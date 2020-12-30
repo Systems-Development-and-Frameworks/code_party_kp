@@ -2,31 +2,22 @@ import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
 import Post from "../db/entities/Post";
-import User from "../db/entities/User";
-import { clean, close } from "../db/db";
+import { clean, close, seedPosts, seedUsers } from "../db/db";
 import driver from "../driver";
+import fixture from "../db/fixture";
 
-let user = new User({
-  name: "Peter",
-  email: "peter@widerstand-der-pinguin.ev",
-  password: "hashed",
-});
-let user2 = new User({
-  name: "Peter's Bruder",
-  email: "augustus@coalition-der-waschbaere.ev",
-  password: "123",
-});
-
-let query;
 let mutate;
+let query;
 let server;
 beforeEach(async () => {
   server = new Server();
   const testClient = createTestClient(server);
-  ({ query, mutate } = testClient);
+  //mock authentication
+  server.context = () => ({ id: fixture.peter.id, driver });
+
+  ({ mutate, query } = testClient);
   await clean();
-  await Promise.all([user, user2].map((p) => p.save(p.password)));
-  server.context = () => ({ id: user.id, driver: driver });
+  await seedUsers();
 });
 afterAll(async () => {
   await clean();
@@ -39,11 +30,11 @@ describe("mutations", () => {
     const actionWritePost = () =>
       mutate({
         mutation: WRITE_POST,
-        variables: { title: "Some post" },
+        variables: { post: { title: "Some post" } },
       });
     const WRITE_POST = gql`
-      mutation($title: String!) {
-        write(title: $title) {
+      mutation($post: PostInput!) {
+        write(post: $post) {
           id
           title
           votes
@@ -53,22 +44,8 @@ describe("mutations", () => {
         }
       }
     `;
-    it("throws Forbidden error when unauthenticated", async () => {
-      server.context = () => ({ id: "1", driver: driver });
-      await expect(actionWritePost()).resolves.toMatchObject({
-        errors: [
-          expect.objectContaining({
-            message: "You must be authenticated to write a post!",
-            extensions: { code: "FORBIDDEN" },
-          }),
-        ],
-        data: {
-          write: null,
-        },
-      });
-    });
 
-    it("adds a post to db.postsData", async () => {
+    it("adds a post to the database", async () => {
       expect(await Post.all()).toHaveLength(0);
       await actionWritePost();
       expect(await Post.all()).toHaveLength(1);
@@ -90,8 +67,7 @@ describe("mutations", () => {
   });
 
   describe("UPVOTE", () => {
-    let id = "500";
-    const actionUpvote = () =>
+    const actionUpvote = (id) =>
       mutate({
         mutation: UPVOTE,
         variables: { id: id },
@@ -109,22 +85,9 @@ describe("mutations", () => {
         }
       }
     `;
-    it("throws Forbidden error when unauthenticated", async () => {
-      server.context = () => ({ id: "1", driver: driver });
-      await expect(actionUpvote()).resolves.toMatchObject({
-        errors: [
-          expect.objectContaining({
-            message: "You must be authenticated to upvote a post!",
-            extensions: { code: "FORBIDDEN" },
-          }),
-        ],
-        data: {
-          upvote: null,
-        },
-      });
-    });
+
     it("responds with null when the post doesn't exist", async () => {
-      await expect(actionUpvote()).resolves.toMatchObject({
+      await expect(actionUpvote("id-not-included")).resolves.toMatchObject({
         errors: [
           expect.objectContaining({
             message: "Couldn't find a post with given id!",
@@ -134,23 +97,20 @@ describe("mutations", () => {
         data: { upvote: null },
       });
     });
-    let post = new Post({ title: "Pinguine sind keine Vögel", author: user });
     describe("given posts in the database", () => {
       beforeEach(async () => {
-        await post.save();
-        id = post.id;
+        await seedPosts();
       });
 
       const actionGetPost = () =>
         query({
-          query: GETPOST,
-          variables: { id: id },
+          query: GET_POST,
+          variables: { id: fixture.petersPost.id },
         });
 
-      const GETPOST = gql`
+      const GET_POST = gql`
         query($id: ID!) {
           Post(id: $id) {
-            title
             votes
           }
         }
@@ -158,22 +118,19 @@ describe("mutations", () => {
 
       it("upvotes a post", async () => {
         await expect(actionGetPost()).resolves.toMatchObject({
-          errors: undefined,
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 0,
               },
             ],
           },
         });
-        await actionUpvote();
+        await actionUpvote(fixture.petersPost.id);
         await expect(actionGetPost()).resolves.toMatchObject({
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 1,
               },
             ],
@@ -182,7 +139,9 @@ describe("mutations", () => {
       });
 
       it("responds with the upvoted post", async () => {
-        await expect(actionUpvote()).resolves.toMatchObject({
+        await expect(
+          actionUpvote(fixture.petersPost.id)
+        ).resolves.toMatchObject({
           errors: undefined,
           data: {
             upvote: {
@@ -197,23 +156,20 @@ describe("mutations", () => {
 
       it("upvoting a post twice by the same user results in 1 vote", async () => {
         await expect(actionGetPost()).resolves.toMatchObject({
-          errors: undefined,
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 0,
               },
             ],
           },
         });
-        await actionUpvote();
-        await actionUpvote();
+        await actionUpvote(fixture.petersPost.id);
+        await actionUpvote(fixture.petersPost.id);
         await expect(actionGetPost()).resolves.toMatchObject({
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 1,
               },
             ],
@@ -223,24 +179,21 @@ describe("mutations", () => {
 
       it("upvoting a post by two users should result in 2 votes", async () => {
         await expect(actionGetPost()).resolves.toMatchObject({
-          errors: undefined,
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 0,
               },
             ],
           },
         });
-        await actionUpvote();
-        server.context = () => ({ id: user2.id, driver: driver });
-        await actionUpvote();
+        await actionUpvote(fixture.petersPost.id);
+        server.context = () => ({ id: fixture.brother.id, driver: driver });
+        await actionUpvote(fixture.petersPost.id);
         await expect(actionGetPost()).resolves.toMatchObject({
           data: {
             Post: [
               {
-                title: "Pinguine sind keine Vögel",
                 votes: 2,
               },
             ],

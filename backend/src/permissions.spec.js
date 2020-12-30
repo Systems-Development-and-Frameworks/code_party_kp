@@ -12,8 +12,7 @@ let server;
 beforeEach(async () => {
   server = new Server();
   let testClient = createTestClient(server);
-  mutate = testClient.mutate;
-  query = testClient.query;
+  ({ query, mutate } = testClient);
 
   await clean();
   await seed();
