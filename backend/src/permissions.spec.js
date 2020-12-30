@@ -56,6 +56,31 @@ describe("Mutation", () => {
         },
       });
     });
+
+    const actionDeleteUser = (id) =>
+      mutate({
+        mutation: DELETE_USER,
+        variables: { id },
+      });
+    const DELETE_USER = gql`
+      mutation($id: ID!) {
+        DeleteUser(id: $id) {
+          name
+        }
+      }
+    `;
+
+    it("throws `Not Authorised` if trying to access subschema and user is authenticated", async () => {
+      server.context = () => ({ id: fixture.peter.id, driver });
+      await expect(actionDeleteUser(fixture.brother.id)).resolves.toMatchObject(
+        {
+          errors: [{ message: "Not Authorised!" }],
+          data: {
+            DeleteUser: null,
+          },
+        }
+      );
+    });
     it("responds with created post if user is authenticated", async () => {
       server.context = () => ({ id: fixture.peter.id, driver });
       await expect(action()).resolves.toMatchObject({

@@ -1,4 +1,4 @@
-import { rule, shield, allow } from "graphql-shield";
+import { rule, shield, allow, deny } from "graphql-shield";
 
 import User from "./db/entities/User";
 
@@ -11,15 +11,26 @@ const isAuthenticated = rule({ cache: "contextual" })(
 
 export const permissions = shield(
   {
-    Query: {
+    User: {
       "*": allow,
+    },
+    Post: {
+      "*": allow,
+    },
+    Query: {
+      users: allow,
+      posts: allow,
     },
 
     Mutation: {
-      "*": allow,
+      login: allow,
+      signup: allow,
       upvote: isAuthenticated,
       write: isAuthenticated,
     },
   },
-  { allowExternalErrors: true }
+  {
+    allowExternalErrors: true,
+    fallbackRule: deny,
+  }
 );
