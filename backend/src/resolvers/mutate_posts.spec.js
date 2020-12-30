@@ -4,9 +4,8 @@ import { gql } from "apollo-server";
 import Server from "../server";
 import Post from "../db/entities/Post";
 import User from "../db/entities/User";
-import { clean, close } from "../db/db"
-import driver from "../driver"
-
+import { clean, close } from "../db/db";
+import driver from "../driver";
 
 let user = new User({
   name: "Peter",
@@ -16,70 +15,65 @@ let user = new User({
 let user2 = new User({
   name: "Peter's Bruder",
   email: "augustus@coalition-der-waschbaere.ev",
-  password: "123"
+  password: "123",
 });
 
 let query;
 let mutate;
-let server
+let server;
 beforeEach(async () => {
   server = new Server();
   const testClient = createTestClient(server);
   ({ query, mutate } = testClient);
   await clean();
   await Promise.all([user, user2].map((p) => p.save(p.password)));
-  server.context = () => ({ id: user.id, driver: driver })
+  server.context = () => ({ id: user.id, driver: driver });
 });
 afterAll(async () => {
   await clean();
   await close();
   driver.close();
-})
+});
 
 describe("mutations", () => {
   describe("WRITE_POST", () => {
-    
     const actionWritePost = () =>
       mutate({
         mutation: WRITE_POST,
         variables: { title: "Some post" },
       });
     const WRITE_POST = gql`
-        mutation($title: String!) {
-          write(title: $title) {
-            id
-            title
-            votes
-            author {
-              name
-            }
+      mutation($title: String!) {
+        write(title: $title) {
+          id
+          title
+          votes
+          author {
+            name
           }
         }
-      `;
-    it('throws Forbidden error when unauthenticated', async () => {
-      server.context = () => ({ id: "1", driver: driver })
-      await expect(
-        actionWritePost()
-      ).resolves.toMatchObject({
+      }
+    `;
+    it("throws Forbidden error when unauthenticated", async () => {
+      server.context = () => ({ id: "1", driver: driver });
+      await expect(actionWritePost()).resolves.toMatchObject({
         errors: [
           expect.objectContaining({
-            message: 'You must be authenticated to write a post!',
-            extensions: { code: 'FORBIDDEN' }
-          })
+            message: "You must be authenticated to write a post!",
+            extensions: { code: "FORBIDDEN" },
+          }),
         ],
         data: {
-          write: null
-        }
+          write: null,
+        },
       });
     });
-
 
     it("adds a post to db.postsData", async () => {
       expect(await Post.all()).toHaveLength(0);
       await actionWritePost();
       expect(await Post.all()).toHaveLength(1);
     });
-
 
     it("responds with created post", async () => {
       await expect(actionWritePost()).resolves.toMatchObject({
@@ -96,7 +90,6 @@ describe("mutations", () => {
     });
   });
 
-
   describe("UPVOTE", () => {
     let id = "500";
     const actionUpvote = () =>
@@ -106,40 +99,38 @@ describe("mutations", () => {
       });
 
     const UPVOTE = gql`
-        mutation($id: ID!) {
-          upvote(id: $id) {
-            id
-            title
-            votes
-            author {
-              name
-            }
+      mutation($id: ID!) {
+        upvote(id: $id) {
+          id
+          title
+          votes
+          author {
+            name
           }
         }
-      `;
-    it('throws Forbidden error when unauthenticated', async () => {
-      server.context = () => ({ id: "1", driver: driver })
-      await expect(
-        actionUpvote()
-      ).resolves.toMatchObject({
+      }
+    `;
+    it("throws Forbidden error when unauthenticated", async () => {
+      server.context = () => ({ id: "1", driver: driver });
+      await expect(actionUpvote()).resolves.toMatchObject({
         errors: [
           expect.objectContaining({
-            message: 'You must be authenticated to upvote a post!',
-            extensions: { code: 'FORBIDDEN' }
-          })
+            message: "You must be authenticated to upvote a post!",
+            extensions: { code: "FORBIDDEN" },
+          }),
         ],
         data: {
-          upvote: null
-        }
+          upvote: null,
+        },
       });
     });
     it("responds with null when the post doesn't exist", async () => {
       await expect(actionUpvote()).resolves.toMatchObject({
         errors: [
           expect.objectContaining({
-            message: ("Dont found the post with this id"),
-            extensions: { code: 'FORBIDDEN' }
-          })
+            message: "Dont found the post with this id",
+            extensions: { code: "FORBIDDEN" },
+          }),
         ],
         data: { upvote: null },
       });
@@ -147,8 +138,8 @@ describe("mutations", () => {
     let post = new Post({ title: "Pinguine sind keine Vögel", author: user });
     describe("given posts in the database", () => {
       beforeEach(async () => {
-        await post.save()
-        id = post.id
+        await post.save();
+        id = post.id;
       });
 
       const actionGetPost = () =>
@@ -158,7 +149,7 @@ describe("mutations", () => {
         });
 
       const GETPOST = gql`
-       query($id: ID!){
+        query($id: ID!) {
           Post(id: $id) {
             title
             votes
@@ -167,30 +158,29 @@ describe("mutations", () => {
       `;
 
       it("upvotes a post", async () => {
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            errors: undefined,
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 0
-              }]
-            }
-          }
-        );
+                votes: 0,
+              },
+            ],
+          },
+        });
         await actionUpvote();
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 1
-              }]
-            }
-          }
-        );
+                votes: 1,
+              },
+            ],
+          },
+        });
       });
-
 
       it("responds with the upvoted post", async () => {
         await expect(actionUpvote()).resolves.toMatchObject({
@@ -207,58 +197,57 @@ describe("mutations", () => {
       });
 
       it("upvoting a post twice by the same user results in 1 vote", async () => {
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            errors: undefined,
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 0
-              }]
-            }
-          }
-        );
+                votes: 0,
+              },
+            ],
+          },
+        });
         await actionUpvote();
         await actionUpvote();
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 1
-              }]
-            }
-          }
-        );
+                votes: 1,
+              },
+            ],
+          },
+        });
       });
 
       it("upvoting a post by two users should result in 2 votes", async () => {
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            errors: undefined,
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          errors: undefined,
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 0
-              }]
-            }
-          }
-        );
+                votes: 0,
+              },
+            ],
+          },
+        });
         await actionUpvote();
         server.context = () => ({ id: user2.id, driver: driver });
         await actionUpvote();
-        await expect(actionGetPost()).resolves.toMatchObject(
-          {
-            data: {
-              Post: [{
+        await expect(actionGetPost()).resolves.toMatchObject({
+          data: {
+            Post: [
+              {
                 title: "Pinguine sind keine Vögel",
-                votes: 2
-              }]
-            }
-          }
-        );
+                votes: 2,
+              },
+            ],
+          },
+        });
       });
     });
   });
 });
-

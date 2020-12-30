@@ -1,45 +1,41 @@
-import User from '../db/entities/User';
-import Post from '../db/entities/Post';
-import {
-  ForbiddenError
-} from 'apollo-server';
-import { delegateToSchema } from '@graphql-tools/delegate';
+import User from "../db/entities/User";
+import Post from "../db/entities/Post";
+import { ForbiddenError } from "apollo-server";
+import { delegateToSchema } from "@graphql-tools/delegate";
 
 export default ({ subschema }) => ({
   Mutation: {
     write: async (parent, { title }, context, info) => {
-      let currentUser = await User.first({ id: context.id, })
+      let currentUser = await User.first({ id: context.id });
       if (!currentUser)
-        throw new ForbiddenError("You must be authenticated to write a post!")
+        throw new ForbiddenError("You must be authenticated to write a post!");
       const post = new Post({ title: title, author: currentUser });
       await post.save();
       const [resolvedPost] = await delegateToSchema({
-        schema: subschema, 
-        operation: 'query',
-        fieldName: 'Post',
-        args: {id: post.id},
+        schema: subschema,
+        operation: "query",
+        fieldName: "Post",
+        args: { id: post.id },
         context,
-        info
+        info,
       });
       return resolvedPost;
-      
-
     },
     upvote: async (parent, args, context, info) => {
-     let currentUser = await User.first({ id: context.id})
+      let currentUser = await User.first({ id: context.id });
       if (!currentUser)
         throw new ForbiddenError("You must be authenticated to upvote a post!");
-      let currentPost = await Post.first({ id: args.id })
+      let currentPost = await Post.first({ id: args.id });
       if (!currentPost)
-        throw new ForbiddenError("Dont found the post with this id")
-      await currentPost.upvote(currentUser)
+        throw new ForbiddenError("Dont found the post with this id");
+      await currentPost.upvote(currentUser);
       const [resolvedPost] = await delegateToSchema({
-        schema: subschema, 
-        operation: 'query',
-        fieldName: 'Post',
-        args: {id: currentPost.id},
+        schema: subschema,
+        operation: "query",
+        fieldName: "Post",
+        args: { id: currentPost.id },
         context,
-        info
+        info,
       });
       return resolvedPost;
     },

@@ -5,25 +5,22 @@ import { verifyToken } from "../services/jwt.js";
 import { clean, close, seed } from "../db/db";
 import driver from "../driver";
 
-
-let mutate
-beforeEach(async() => {
+let mutate;
+beforeEach(async () => {
   let server = new Server();
   let testClient = createTestClient(server);
   mutate = testClient.mutate;
   await clean();
   await seed();
-})
+});
 afterAll(async () => {
   await clean();
-  await close()
-  await driver.close()
+  await close();
+  await driver.close();
 });
 describe("mutations", () => {
   describe("SIGNUP", () => {
-    beforeEach(async () => {
-    
-    });
+    beforeEach(async () => {});
     const actionSIGNUP = (name, email, password) =>
       mutate({
         mutation: SIGNUP,
@@ -49,7 +46,11 @@ describe("mutations", () => {
 
     it("raises an error if email is taken", async () => {
       expect(
-        await actionSIGNUP("Peter", "peter@widerstand-der-pinguin.ev", "sldfjwrkkev")
+        await actionSIGNUP(
+          "Peter",
+          "peter@widerstand-der-pinguin.ev",
+          "sldfjwrkkev"
+        )
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Email already exists!" }],
