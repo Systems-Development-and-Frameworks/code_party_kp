@@ -11,15 +11,14 @@ const isAuthenticated = rule({ cache: "contextual" })(
 
 export const permissions = shield(
   {
-    User: {
-      "*": allow,
-    },
-    Post: {
-      "*": allow,
-    },
+    User: allow,
+    Post: allow,
+
     Query: {
       users: allow,
       posts: allow,
+      Post: allow,
+      User: allow,
     },
 
     Mutation: {
