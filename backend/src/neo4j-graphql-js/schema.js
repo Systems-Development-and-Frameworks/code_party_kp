@@ -17,8 +17,5 @@ const typeDefs = gql`
     voters: [User] @relation(name: "UPVOTED_BY", direction: "OUT")
   }
 `;
-const schema = makeAugmentedSchema({
-  typeDefs,
-  config: { query: false, mutation: false },
-});
+const schema = makeAugmentedSchema({ typeDefs });
 export default schema;
