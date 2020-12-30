@@ -2,7 +2,6 @@ import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "./server";
 import { clean, seed, close } from "./db/db.js";
-//TODO @maybe that's a singleton, right? so what happens if closed by multiple suits?
 import driver from "./driver";
 import fixture from "./db/fixture.js";
 

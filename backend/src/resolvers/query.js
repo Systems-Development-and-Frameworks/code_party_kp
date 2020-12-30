@@ -10,7 +10,6 @@ export default () => ({
     },
   },
 
-  //TODO not tested yet
   Post: {
     votes: {
       selectionSet: "{ voters { id } }",
