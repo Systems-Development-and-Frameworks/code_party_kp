@@ -36,29 +36,25 @@ Why did we choose the Neo4J and neo4j-graphql-js? The Lyon's presentation convin
 
 #### Installing neo4j locally
 
-1. Install neo4j by following the [installation guidelines](https://neo4j.com/docs/operations-manual/current/installation/) for your respective OS. If you are using `macOS` in combination with [homebrew](https://brew.sh/), you are just run
+1. Install neo4j by following the [installation guidelines](https://neo4j.com/docs/operations-manual/current/installation/) for your respective OS. If you are using `macOS` in combination with [homebrew](https://brew.sh/), you can just run
 ```bash
 brew install neo4j
 ```
-2. Once the installation has finished, you can launch it via
+2. Once the installation has finished, you can launch neo4j via
 ```bash
 neo4j start
-neo4j stop
 ```
 3. Navigate to `http://localhost:7474/` to verify it is indeed running
-4. Install some important packages:
+
+5. create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test`
+
+6. Start the application
 ```bash
-npm install --save neo4j-graphql-js
-npm install @graphql-tools/stitch
-npm install neo4j-driver
+npm run dev
 ```
-5. create a environment config file backend/.env with following credentials:
-```bash
-JWT_SECRET=SECRET_1234
-NEO4J_USERNAME=NEO4J
-NEO4J_PASSWORD=NEO4J
+7. Navigate the browser to ```http://localhost:4000/```
+
+8. Once done, the database can be stopped via  
 ```
-6. Start the application:
-- neo4j start
-- npm run dev
-- launch http://localhost:4000/
+neo4j stop
+```
