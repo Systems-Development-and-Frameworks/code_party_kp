@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import * as dotenvFlow from "dotenv-flow";
 
 export function verifyToken(token) {
   //TODO @Here might need to import from config

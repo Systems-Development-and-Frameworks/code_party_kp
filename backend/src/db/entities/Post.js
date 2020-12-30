@@ -1,5 +1,4 @@
 import neode from "../neode";
-import crypto from "crypto";
 
 export default class Post {
   constructor(data) {

@@ -1,8 +1,10 @@
 import { rule, shield, allow } from "graphql-shield";
 
+import User from "./db/entities/User";
+
 const isAuthenticated = rule({ cache: "contextual" })(
-  async (_parent, _args, { dataSources, id }) => {
-    let exists = dataSources.db.userExists(id);
+  async (_parent, _args, { id }) => {
+    let exists = await User.exists({ id });
     return exists;
   }
 );

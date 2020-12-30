@@ -5,7 +5,7 @@ import { delegateToSchema } from "@graphql-tools/delegate";
 
 export default ({ subschema }) => ({
   Mutation: {
-    write: async (_parent, { title }, context, info) => {
+    write: async (_parent, { post: { title } }, context, info) => {
       let currentUser = await User.first({ id: context.id });
       if (!currentUser)
         throw new ForbiddenError("You must be authenticated to write a post!");

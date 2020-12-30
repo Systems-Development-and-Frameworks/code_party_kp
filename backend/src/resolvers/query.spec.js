@@ -54,7 +54,7 @@ describe("queries", () => {
         await expect(query({ query: USERS })).resolves.toMatchObject({
           errors: undefined,
           data: {
-            users: [
+            users: expect.arrayContaining([
               {
                 name: "Peter's Bruder",
                 posts: [],
@@ -70,7 +70,7 @@ describe("queries", () => {
                   },
                 ],
               },
-            ],
+            ]),
           },
         });
       });
@@ -109,7 +109,7 @@ describe("queries", () => {
         await expect(query({ query: USERS_NESTED })).resolves.toMatchObject({
           errors: undefined,
           data: {
-            users: [
+            users: expect.arrayContaining([
               {
                 name: "Peter's Bruder",
                 posts: [],
@@ -145,7 +145,7 @@ describe("queries", () => {
                   },
                 ],
               },
-            ],
+            ]),
           },
         });
       });

@@ -1,4 +1,3 @@
-import { jest } from "@jest/globals";
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";

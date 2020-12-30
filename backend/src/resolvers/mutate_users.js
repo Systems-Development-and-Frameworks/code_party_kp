@@ -6,7 +6,7 @@ function isPasswordStrong(password) {
   return password.length >= 8;
 }
 
-export default ({ subschema }) => ({
+export default () => ({
   Mutation: {
     login: async (_parent, { email, password }) => {
       const user = await User.first({ email });
