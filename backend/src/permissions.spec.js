@@ -85,8 +85,8 @@ describe("Mutation", () => {
           data: { signup },
           errors,
         } = await action(
-          "Peter",
-          "peter@widerstand-der-pinguine.ev",
+          "Geogre",
+          "geogre@widerstand-der-pinguine.ev",
           "P1nGu1n3S1nDk31n3Voeg3l"
         );
         expect(errors).toBeUndefined();

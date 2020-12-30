@@ -4,6 +4,7 @@ import Server from "../server";
 import { verifyToken } from "../services/jwt.js";
 import { clean, close, seed } from "../db/db";
 import driver from "../driver";
+import fixture from "../db/fixture";
 
 let mutate;
 beforeEach(async () => {
@@ -46,11 +47,7 @@ describe("mutations", () => {
 
     it("raises an error if email is taken", async () => {
       expect(
-        await actionSIGNUP(
-          "Peter",
-          "peter@widerstand-der-pinguin.ev",
-          "sldfjwrkkev"
-        )
+        await actionSIGNUP("Peter", fixture.peter.email, "sldfjwrkkev")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Email already exists!" }],
@@ -90,7 +87,7 @@ describe("mutations", () => {
       }
     `;
     it("raises and error if the user doesn't exist", async () => {
-      expect(await actionLOGIN("A", "B")).toMatchObject({
+      expect(await actionLOGIN("A@a.de", "pw")).toMatchObject({
         data: { login: null },
         errors: [{ message: "There is no user registered with this Email!" }],
       });
@@ -99,7 +96,7 @@ describe("mutations", () => {
     describe("given the user exists", () => {
       it("raises and error if password doesn't match", async () => {
         expect(
-          await actionLOGIN("peter@widerstand-der-pinguin.ev", "pinguin")
+          await actionLOGIN(fixture.peter.email, "something-something-password")
         ).toMatchObject({
           data: { login: null },
           errors: [{ message: "Password did not match!" }],
@@ -110,13 +107,13 @@ describe("mutations", () => {
         const {
           data: { login },
           errors,
-        } = await actionLOGIN("peter@widerstand-der-pinguin.ev", "hashed");
+        } = await actionLOGIN(fixture.peter.email, fixture.petersPassword);
         expect(errors).toBeUndefined();
         let verified = verifyToken(login);
         expect(verified).toEqual({
           exp: expect.anything(),
           iat: expect.anything(),
-          id: "b5bc19f4-164e-49c3-8045-7105580b43be",
+          id: fixture.peter.id,
         });
       });
     });

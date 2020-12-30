@@ -3,7 +3,7 @@ import Post from "./entities/Post";
 
 const peter = new User({
   name: "Peter",
-  email: "peter@widerstand-der-pinguin.ev",
+  email: "peter@widerstand-der-pinguine.ev",
   id: "b5bc19f4-164e-49c3-8045-7105580b43be",
 });
 
