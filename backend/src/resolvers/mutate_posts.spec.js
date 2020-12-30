@@ -128,7 +128,7 @@ describe("mutations", () => {
       await expect(actionUpvote()).resolves.toMatchObject({
         errors: [
           expect.objectContaining({
-            message: "Dont found the post with this id",
+            message: "Couldn't find a post with given id!",
             extensions: { code: "FORBIDDEN" },
           }),
         ],

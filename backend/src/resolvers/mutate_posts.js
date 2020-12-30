@@ -5,7 +5,7 @@ import { delegateToSchema } from "@graphql-tools/delegate";
 
 export default ({ subschema }) => ({
   Mutation: {
-    write: async (parent, { title }, context, info) => {
+    write: async (_parent, { title }, context, info) => {
       let currentUser = await User.first({ id: context.id });
       if (!currentUser)
         throw new ForbiddenError("You must be authenticated to write a post!");
@@ -21,13 +21,13 @@ export default ({ subschema }) => ({
       });
       return resolvedPost;
     },
-    upvote: async (parent, args, context, info) => {
+    upvote: async (_parent, args, context, info) => {
       let currentUser = await User.first({ id: context.id });
       if (!currentUser)
         throw new ForbiddenError("You must be authenticated to upvote a post!");
       let currentPost = await Post.first({ id: args.id });
       if (!currentPost)
-        throw new ForbiddenError("Dont found the post with this id");
+        throw new ForbiddenError("Couldn't find a post with given id!");
       await currentPost.upvote(currentUser);
       const [resolvedPost] = await delegateToSchema({
         schema: subschema,
