@@ -29,17 +29,19 @@ Cancel: cancel the form submission
 Delete: delete the todo
 
 ## Homework - Exercise #5
-WHY?
+### Chosen Scenario - Neo4J and neo4j-graphql-js
 
-Why did we choose the Neo4J and neo4j-graphql-js? The Lyon's presentation convinced us to use and learn about this interesting technology. A similar use case like our WebApp was explained very well in the lecture and we would like to go deeper into this technology to understand how our application can look like using the graphs. It is also very interesting to see how the elements of the application depend on each other. This technology is new for all members, so we would like to explore it further. Regarding our use case: Our data can be represented very clearly with Neo4J, at the same time it also can be visualised and explored very well with Neo4J.
+#### Motivation
+
+Why did we choose Neo4J and neo4j-graphql-js? Lyon's presentation convinced us to use and learn about this interesting technology. A similar use case like our WebApp was explained very well in the lecture and we would like to go deeper into this technology to understand how our application can look like using the graphs. It is also very interesting to see how the elements of the application depend on each other. This technology is new for all members, so we would like to explore it further. Regarding our use case: Our data can be represented very clearly with Neo4J, at the same time it also can be visualised and explored very well with Neo4J.
 
 ### Installation Instructions
 
 We used both variants (local and with Docker). Finally, everything runs with Docker in our CI/CD GitHub Actions, but it helped a lot to do a local installation during the implementation, for example when setting up the Neo4j or testing individual methods.
 
 #### Installing and running neo4j with docker
-1. 
-- Install docker manually and configure it (If you are using `macOS` in combination with [homebrew](https://brew.sh/), you can just run)
+1. Install docker manually 
+- `macOS` in combination with [homebrew](https://brew.sh/)
 ```bash
 brew install docker
 brew install virtualbox
@@ -47,31 +49,27 @@ docker-machine create --driver virtualbox default
 docker-machine env default
 eval "$(docker-machine env default)"
 ```
-- alternatively you can download a docker desktop from the official website https://www.docker.com/get-started for your OS and just install it. All configuration will be done by the installer automatically
+- alternatively you can download docker desktop from the [official website](https://www.docker.com/get-started) for your OS and just install it. All configuration will be done by the installer automatically
 
-2. Create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test` (with following credentials `NEO4J_USERNAME=neo4j NEO4J_PASSWORD=NEO4J`)
+2. Create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test`
 
-3. Start the docker with following comand:
+3. Start docker with the following comand:
 ```bash
 docker run -p7474:7474 -p7687:7687 -d -e NEO4J_AUTH=neo4j/NEO4J neo4j
-```
-4. Verify that your local Neo4j instance is not running (if you test it also locally): `neo4j stop`
+``
 
-5. Navigate to `http://localhost:7474/` to verify it is indeed running
+4. Navigate to `http://localhost:7474/` to verify Neo4j is indeed running
 
-6. You can run also tests with the following command (--runInBand -> tests run serially):
-```bash
-npm run test --runInBand
-```
-7. Start the application
+5. Start the application
 ```bash
 npm run dev
 ```
-8. Navigate the browser to ```http://localhost:4000/```
+6. Navigate the browser to ```http://localhost:4000/```
 
-#### Installing neo4j locally (alternative)
+#### Installing and running neo4j locally (alternative)
 
-1. Install neo4j by following the [installation guidelines](https://neo4j.com/docs/operations-manual/current/installation/) for your respective OS. If you are using `macOS` in combination with [homebrew](https://brew.sh/), you can just run
+1. Install neo4j by following the [installation guidelines](https://neo4j.com/docs/operations-manual/current/installation/) for your respective OS. 
+`macOS` in combination with [homebrew](https://brew.sh/), you can just run
 ```bash
 brew install neo4j
 ```
@@ -81,17 +79,17 @@ if you want to run on Windows, you can follow this [instruction](https://neo4j.c
 ```bash
 neo4j start
 ```
-3. Navigate to `http://localhost:7474/` to verify it is indeed running
+3. Navigate to `http://localhost:7474/` to verify Neo4j is indeed running
 
-5. create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test`
+4. create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test`
 
-6. Start the application
+5. Start the application
 ```bash
 npm run dev
 ```
-7. Navigate the browser to ```http://localhost:4000/```
+6. Navigate the browser to ```http://localhost:4000/```
 
-8. Once done, the database can be stopped via  
+7. Once done, the database can be stopped via  
 ```
 neo4j stop
 ```
