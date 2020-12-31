@@ -56,7 +56,7 @@ eval "$(docker-machine env default)"
 3. Start docker with the following comand:
 ```bash
 docker run -p7474:7474 -p7687:7687 -d -e NEO4J_AUTH=neo4j/NEO4J neo4j
-``
+```
 
 4. Navigate to `http://localhost:7474/` to verify Neo4j is indeed running
 
