@@ -75,6 +75,7 @@ npm run dev
 ```bash
 brew install neo4j
 ```
+if you want to run on Windows, you can follow this [introduction](https://neo4j.com/docs/operations-manual/current/installation/windows/)
 2. Once the installation has finished, you can launch neo4j via
 ```bash
 neo4j start
