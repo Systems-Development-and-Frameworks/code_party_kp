@@ -62,6 +62,7 @@ docker run -p 7474:7474 -p 7687:7687 -d -e NEO4J_AUTH=neo4j/NEO4J neo4j
 
 5. Start the application
 ```bash
+npm install
 npm run dev
 ```
 6. Navigate the browser to ```http://localhost:4000/```
@@ -85,6 +86,7 @@ neo4j start
 
 5. Start the application
 ```bash
+npm install
 npm run dev
 ```
 6. Navigate the browser to ```http://localhost:4000/```
