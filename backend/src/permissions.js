@@ -1,23 +1,35 @@
-import { rule, shield, allow } from "graphql-shield";
+import { rule, shield, allow, deny } from "graphql-shield";
+
+import User from "./db/entities/User";
 
 const isAuthenticated = rule({ cache: "contextual" })(
-  async (_parent, _args, { dataSources, id }) => {
-    let exists = dataSources.db.userExists(id);
+  async (_parent, _args, { id }) => {
+    let exists = await User.exists({ id });
     return exists;
   }
 );
 
 export const permissions = shield(
   {
+    User: allow,
+    Post: allow,
+
     Query: {
-      "*": allow,
+      users: allow,
+      posts: allow,
+      Post: allow,
+      User: allow,
     },
 
     Mutation: {
-      "*": allow,
+      login: allow,
+      signup: allow,
       upvote: isAuthenticated,
       write: isAuthenticated,
     },
   },
-  { allowExternalErrors: true }
+  {
+    allowExternalErrors: true,
+    fallbackRule: deny,
+  }
 );

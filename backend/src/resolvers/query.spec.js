@@ -1,20 +1,23 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
-import { MemoryDataSource, User, Post } from "../db";
+import { clean, seed, close } from "../db/db.js";
+import driver from "../driver";
 
-let query = undefined;
-let server = undefined;
-let db = undefined;
-
-beforeEach(() => {
-  db = new MemoryDataSource();
-  server = new Server({ dataSources: () => ({ db }) });
-  let testClient = createTestClient(server);
-  query = testClient.query;
-});
+let server = new Server();
+let testClient = createTestClient(server);
+let query = testClient.query;
 
 describe("queries", () => {
+  beforeAll(async () => {
+    await clean();
+  });
+
+  afterAll(async () => {
+    await close();
+    await driver.close();
+  });
+
   describe("USERS", () => {
     const USERS = gql`
       query {
@@ -40,27 +43,22 @@ describe("queries", () => {
     });
 
     describe("given users in the database", () => {
-      beforeEach(() => {
-        let user = new User({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguin.ev",
-          password: "hashed",
-          id: "1",
-        });
-        let post = new Post({
-          title: "Pinguine sind keine Vögel",
-          author: user,
-          id: "11",
-        });
-        db.usersData.push(user);
-        db.postsData.push(post);
+      beforeAll(async () => {
+        await seed();
+      });
+      afterAll(async () => {
+        await clean();
       });
 
       it("returns users", async () => {
         await expect(query({ query: USERS })).resolves.toMatchObject({
           errors: undefined,
           data: {
-            users: [
+            users: expect.arrayContaining([
+              {
+                name: "Peter's Bruder",
+                posts: [],
+              },
               {
                 name: "Peter",
                 posts: [
@@ -72,7 +70,7 @@ describe("queries", () => {
                   },
                 ],
               },
-            ],
+            ]),
           },
         });
       });
@@ -111,7 +109,11 @@ describe("queries", () => {
         await expect(query({ query: USERS_NESTED })).resolves.toMatchObject({
           errors: undefined,
           data: {
-            users: [
+            users: expect.arrayContaining([
+              {
+                name: "Peter's Bruder",
+                posts: [],
+              },
               {
                 name: "Peter",
                 posts: [
@@ -143,7 +145,7 @@ describe("queries", () => {
                   },
                 ],
               },
-            ],
+            ]),
           },
         });
       });
@@ -172,20 +174,11 @@ describe("queries", () => {
     });
 
     describe("given posts in the database", () => {
-      beforeEach(() => {
-        let user = new User({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguin.ev",
-          password: "hashed",
-          id: "1",
-        });
-        let post = new Post({
-          title: "Pinguine sind keine Vögel",
-          author: user,
-          id: "11",
-        });
-        db.usersData.push(user);
-        db.postsData.push(post);
+      beforeAll(async () => {
+        await seed();
+      });
+      afterAll(async () => {
+        await clean();
       });
 
       it("returns posts", async () => {

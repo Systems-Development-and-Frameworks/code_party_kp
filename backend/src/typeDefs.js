@@ -1,22 +1,6 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
-  type Post {
-    id: ID!
-    title: String!
-    votes: Int!
-    author: User!
-  }
-
-  type User {
-    # ⚠️ attributes 'id' and 'name' have changed!
-    # 'id' now represents a randomly generated string, similar to 'Post.id'
-    id: ID!
-    name: String!
-    email: String!
-    posts: [Post]
-  }
-
   type Query {
     posts: [Post]
     users: [User]
@@ -40,9 +24,12 @@ const typeDefs = gql`
     """
     signup(name: String!, email: String!, password: String!): String
   }
-
+  extend type Post {
+    votes: Int
+  }
   input PostInput {
     title: String!
   }
 `;
+
 export default typeDefs;

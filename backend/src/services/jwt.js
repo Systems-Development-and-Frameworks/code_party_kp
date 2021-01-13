@@ -1,7 +1,4 @@
 import jwt from "jsonwebtoken";
-import * as dotenvFlow from "dotenv-flow";
-
-dotenvFlow.config();
 
 export function verifyToken(token) {
   return jwt.verify(token, process.env.JWT_SECRET);

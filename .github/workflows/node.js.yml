@@ -9,12 +9,17 @@ jobs:
       strategy:
         matrix:
           node-version: [14.x]
-
+      env:
+        NEO4J_PASSWORD: NEO4J
+        NEO4J_USERNAME: neo4j
       steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: KarakoA/setup-neo4j@v1.1.1
+        with:
+          password: NEO4J
       - run: |
               npm install
               npm run test

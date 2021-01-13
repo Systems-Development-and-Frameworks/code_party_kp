@@ -1,24 +1,28 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import Server from "../server";
-import { MemoryDataSource } from "../db";
 import { verifyToken } from "../services/jwt.js";
-import { hash } from "../services/hashing.js";
+import { clean, close, seed } from "../db/db";
+import driver from "../driver";
+import fixture from "../db/fixture";
 
-let mutate = undefined;
-let db = undefined;
-
-beforeEach(() => {
-  db = new MemoryDataSource();
-  const server = new Server({ dataSources: () => ({ db }) });
-
+let mutate;
+beforeEach(async () => {
+  let server = new Server();
   let testClient = createTestClient(server);
   mutate = testClient.mutate;
+  await clean();
+  await seed();
 });
-
+afterAll(async () => {
+  await clean();
+  await close();
+  await driver.close();
+});
 describe("mutations", () => {
   describe("SIGNUP", () => {
-    const action = (name, email, password) =>
+    beforeEach(async () => {});
+    const actionSIGNUP = (name, email, password) =>
       mutate({
         mutation: SIGNUP,
         variables: {
@@ -34,7 +38,7 @@ describe("mutations", () => {
     `;
     it("raises and error if password < 8 characters", async () => {
       expect(
-        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+        await actionSIGNUP("geogre", "geogre@widerstand-der-pinguine.ev", "pin")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Password must be at least 8 characters long!" }],
@@ -42,13 +46,8 @@ describe("mutations", () => {
     });
 
     it("raises an error if email is taken", async () => {
-      await db.addNewUser({
-        name: "Peter's Bruder",
-        email: "peter@widerstand-der-pinguine.ev",
-        password: "hashed",
-      });
       expect(
-        await action("Peter", "peter@widerstand-der-pinguine.ev", "pinguin")
+        await actionSIGNUP("Peter", fixture.peter.email, "sldfjwrkkev")
       ).toMatchObject({
         data: { signup: null },
         errors: [{ message: "Email already exists!" }],
@@ -58,10 +57,10 @@ describe("mutations", () => {
       const {
         data: { signup },
         errors,
-      } = await action(
-        "Peter",
-        "peter@widerstand-der-pinguine.ev",
-        "P1nGu1n3S1nDk31n3Voeg3l"
+      } = await actionSIGNUP(
+        "Geogre",
+        "geogre@widerstand-der-pinguine.ev",
+        "sfseltuowu3979fdk"
       );
       expect(errors).toBeUndefined();
       let verified = verifyToken(signup);
@@ -74,7 +73,7 @@ describe("mutations", () => {
   });
 
   describe("LOGIN", () => {
-    const action = (email, password) =>
+    const actionLOGIN = (email, password) =>
       mutate({
         mutation: LOGIN,
         variables: {
@@ -88,26 +87,16 @@ describe("mutations", () => {
       }
     `;
     it("raises and error if the user doesn't exist", async () => {
-      expect(await action("A", "B")).toMatchObject({
+      expect(await actionLOGIN("A@a.de", "pw")).toMatchObject({
         data: { login: null },
         errors: [{ message: "There is no user registered with this Email!" }],
       });
     });
 
     describe("given the user exists", () => {
-      const password = "secure_password";
-      beforeEach(async () => {
-        await db.addNewUser({
-          name: "Peter",
-          email: "peter@widerstand-der-pinguine.ev",
-          password: await hash(password),
-          id: "1",
-        });
-      });
-
       it("raises and error if password doesn't match", async () => {
         expect(
-          await action("peter@widerstand-der-pinguine.ev", "pinguin")
+          await actionLOGIN(fixture.peter.email, "something-something-password")
         ).toMatchObject({
           data: { login: null },
           errors: [{ message: "Password did not match!" }],
@@ -118,13 +107,13 @@ describe("mutations", () => {
         const {
           data: { login },
           errors,
-        } = await action("peter@widerstand-der-pinguine.ev", password);
+        } = await actionLOGIN(fixture.peter.email, fixture.petersPassword);
         expect(errors).toBeUndefined();
         let verified = verifyToken(login);
         expect(verified).toEqual({
           exp: expect.anything(),
           iat: expect.anything(),
-          id: "1",
+          id: fixture.peter.id,
         });
       });
     });

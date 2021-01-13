@@ -1,28 +1,27 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
-import Server from "../server";
-import { MemoryDataSource, User } from "../db";
+import Server from "./server";
+import { clean, seed, close } from "./db/db.js";
+import driver from "./driver";
+import fixture from "./db/fixture.js";
 
 let mutate;
 let query;
-let db;
 let server;
-beforeEach(() => {
-  db = new MemoryDataSource();
-  server = new Server({ dataSources: () => ({ db }) });
+beforeEach(async () => {
+  server = new Server();
   let testClient = createTestClient(server);
-  mutate = testClient.mutate;
-  query = testClient.query;
+  ({ query, mutate } = testClient);
 
-  db.usersData.push(
-    new User({
-      name: "Peter",
-      email: "peter@widerstand-der-pinguin.ev",
-      password: "hashed",
-      id: "1",
-    })
-  );
+  await clean();
+  await seed();
 });
+
+afterAll(async () => {
+  await close();
+  await driver.close();
+});
+
 describe("Mutation", () => {
   describe("write", () => {
     const action = () =>
@@ -48,7 +47,7 @@ describe("Mutation", () => {
     });
 
     it("throws `Not Authorised` if JWT is valid but user has been deleted", async () => {
-      server.context = () => ({ id: "not-in-db" });
+      server.context = () => ({ id: "not-in-db", driver });
       await expect(action()).resolves.toMatchObject({
         errors: [{ message: "Not Authorised!" }],
         data: {
@@ -56,8 +55,33 @@ describe("Mutation", () => {
         },
       });
     });
+
+    const actionDeleteUser = (id) =>
+      mutate({
+        mutation: DELETE_USER,
+        variables: { id },
+      });
+    const DELETE_USER = gql`
+      mutation($id: ID!) {
+        DeleteUser(id: $id) {
+          name
+        }
+      }
+    `;
+
+    it("throws `Not Authorised` if trying to access subschema and user is authenticated", async () => {
+      server.context = () => ({ id: fixture.peter.id, driver });
+      await expect(actionDeleteUser(fixture.brother.id)).resolves.toMatchObject(
+        {
+          errors: [{ message: "Not Authorised!" }],
+          data: {
+            DeleteUser: null,
+          },
+        }
+      );
+    });
     it("responds with created post if user is authenticated", async () => {
-      server.context = () => ({ id: "1" });
+      server.context = () => ({ id: fixture.peter.id, driver });
       await expect(action()).resolves.toMatchObject({
         errors: undefined,
         data: {
@@ -84,8 +108,8 @@ describe("Mutation", () => {
           data: { signup },
           errors,
         } = await action(
-          "Peter",
-          "peter@widerstand-der-pinguine.ev",
+          "Geogre",
+          "geogre@widerstand-der-pinguine.ev",
           "P1nGu1n3S1nDk31n3Voeg3l"
         );
         expect(errors).toBeUndefined();
@@ -104,7 +128,11 @@ describe("Mutation", () => {
       it("responds with array of users", async () => {
         await expect(query({ query: USERS })).resolves.toMatchObject({
           errors: undefined,
-          data: { users: [{ name: "Peter" }] },
+          data: {
+            users: expect.arrayContaining([
+              ({ name: "Peter" }, { name: "Peter's Bruder" }),
+            ]),
+          },
         });
       });
     });
