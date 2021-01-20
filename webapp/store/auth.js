@@ -1,13 +1,12 @@
 import { SET_USER, SET_TOKEN } from ".";
 import { gql } from "@apollo/client";
 import jwt_decode from "jwt-decode";
+
 export const state = () => ({
   //JWT token
   token: null,
-
   //currently logged in user
   currentUser: null
-
 });
 export const getters = {
   isAuthenticated: state => {
@@ -21,8 +20,7 @@ export const mutations = {
   },
   [SET_USER](state, user) {
     state.currentUser = user;
-  },
-
+  }
 };
 
 export const actions = {
@@ -44,6 +42,7 @@ export const actions = {
       const token = response.data.login;
       const decoded = jwt_decode(response.data.login);
 
+      this.$apolloHelpers.onLogin(token);
       commit(SET_TOKEN, token);
       commit(SET_USER, decoded.id);
       return true;
@@ -58,7 +57,8 @@ export const actions = {
     }
   },
   logout({ commit }) {
+    this.$apolloHelpers.onLogout();
     commit(SET_TOKEN, null);
     commit(SET_USER, null);
-  },
+  }
 };
