@@ -1,6 +1,6 @@
 <template>
-  <h1 v-if="isAuthenticated">Succesfully logged in!</h1>
-  <form v-else @submit.prevent>
+  <h1 class="info" v-if="isAuthenticated">Successfully logged in!</h1>
+  <form v-else @submit.prevent="submit">
     <label>Email</label>
     <input id="email" v-model="email" aria-label="email" />
     <label>Password</label>
@@ -10,7 +10,9 @@
       aria-label="password"
       type="password"
     />
-    <button @click="submit" :disabled="!(email && password)">Login</button>
+    <button :disabled="!(email && password)" type="submit">
+      Login
+    </button>
     <div v-if="error" class="error">{{ error }}</div>
   </form>
 </template>
@@ -38,7 +40,6 @@ export default {
         if (success) this.error = "";
         else this.error = "Incorrect email/password!";
       } catch (err) {
-        console.log(err);
         this.error = "Internal ERROR: Something went wrong!";
       }
     }
