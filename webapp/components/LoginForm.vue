@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -19,14 +19,6 @@ export default {
       password: "peter1",
       error: ""
     };
-  },
-  computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
-    ...mapState('auth', ['loading', 'currentUser']),
-    valid() {
-      const { email, password } = this.formData
-      return email && password
-    },
   },
   methods: {
     ...mapActions("auth", ["login"]),
