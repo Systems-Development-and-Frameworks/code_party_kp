@@ -4,8 +4,9 @@ import jwt_decode from "jwt-decode";
 export const state = () => ({
   //JWT token
   token: null,
-  //currently logged in user(id)
-  currentUser: null,
+
+  //currently logged in user
+  currentUser: null
 
 });
 export const getters = {
@@ -26,24 +27,35 @@ export const mutations = {
 
 export const actions = {
   async login({ commit }, { email, password }) {
-    const loginGql = gql`
-      mutation($email: String!, $password: String!) {
-        login(email: $email, password: $password)
-      }
-    `;
-    const response = await this.app.apolloProvider.defaultClient.mutate({
-      mutation: loginGql,
-      variables: {
-        email,
-        password
-      }
-    });
+    try {
+      const loginGql = gql`
+        mutation($email: String!, $password: String!) {
+          login(email: $email, password: $password)
+        }
+      `;
+      const response = await this.app.apolloProvider.defaultClient.mutate({
+        mutation: loginGql,
+        variables: {
+          email,
+          password
+        }
+      });
 
-    const token = response.data.login;
-    const decoded = jwt_decode(response.data.login);
+      const token = response.data.login;
+      const decoded = jwt_decode(response.data.login);
 
-    commit(SET_TOKEN, token);
-    commit(SET_USER, decoded.id);
+      commit(SET_TOKEN, token);
+      commit(SET_USER, decoded.id);
+      return true;
+    } catch (err) {
+      if (
+        err.message ===
+          "GraphQL error: There is no user registered with this Email!" ||
+        err.message === "GraphQL error: Password did not match!"
+      ) {
+        return false;
+      } else throw err;
+    }
   },
   logout({ commit }) {
     commit(SET_TOKEN, null);
