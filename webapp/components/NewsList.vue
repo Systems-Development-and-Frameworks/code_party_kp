@@ -10,7 +10,7 @@
         The list is empty :(
       </div>
     </div>
-    <NewsForm :newTitle="newTitle" @create="create"/>
+    <NewsForm @create="create" />
     <button @click="reverse" id="reverseButton">
       Reverse order
     </button>
@@ -26,9 +26,9 @@ export default {
       news: [
         { title: "VueJs", votes: 0, id: 1 },
         { title: "just", votes: 0, id: 2 },
-        { title: "rocks", votes: 0, id: 3 },
+        { title: "rocks", votes: 0, id: 3 }
       ],
-      sortOrder: 1,
+      sortOrder: 1
     };
   },
   components: {
@@ -40,15 +40,15 @@ export default {
       this.sortOrder = this.sortOrder * -1;
     },
     update(newItem) {
-      this.news = this.news.map((x) => (x.id == newItem.id ? newItem : x));
+      this.news = this.news.map(x => (x.id == newItem.id ? newItem : x));
     },
     remove(newItem) {
-      this.news = this.news.filter((x) => newItem.id !== x.id);
+      this.news = this.news.filter(x => newItem.id !== x.id);
     },
-    
+
     create(newItem) {
       this.news.push(newItem);
-    },
+    }
   },
   computed: {
     newsSorted() {
@@ -58,8 +58,8 @@ export default {
     },
     isEmpty() {
       return this.news.length == 0;
-    },
-  },
+    }
+  }
 };
 </script>
 
