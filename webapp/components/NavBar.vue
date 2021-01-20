@@ -1,14 +1,11 @@
 <template>
   <nav class="nav-bar">
     <div>
-      <nuxt-link to="/login" v-if="!isAuthenticated">Login</nuxt-link>
-      <!-- <button @click="logout" v-if="isAuthenticated">Logout</button> -->
+      <nuxt-link to="/">Posts</nuxt-link>
     </div>
     <div>
-      <template v-if="isAuthenticated">
-        <button @click="logout">Logout</button>
-      </template>
-      <template v-else> You are not logged in! </template>
+        <nuxt-link to="/login" v-if="!isAuthenticated">Login</nuxt-link>
+        <button v-else @click="logout">Logout</button>    
     </div>
   </nav>
 </template>

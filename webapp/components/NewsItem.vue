@@ -3,7 +3,7 @@
     <h2>{{ news.title }}({{ news.votes }})</h2>
     <button @click="upvote" v-if="isAuthenticated">Upvote</button>
     <button @click="downvote" v-if="isAuthenticated">Downvote</button>
-    <button @click="remove" v-if="isAuthenticated && newsItem.author === currentUser" >Remove</button>
+    <button @click="remove" v-if="isAuthenticated" >Remove</button>
   </div>
 </template>
 <script>
