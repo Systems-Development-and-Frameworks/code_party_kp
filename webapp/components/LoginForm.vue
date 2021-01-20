@@ -1,16 +1,24 @@
 <template>
-  <form @submit.prevent>
+  <h1 class="info" v-if="isAuthenticated">Successfully logged in!</h1>
+  <form v-else @submit.prevent="submit">
     <label>Email</label>
-    <input v-model="email" aria-label="email" />
+    <input id="email" v-model="email" aria-label="email" />
     <label>Password</label>
-    <input v-model="password" aria-label="password" type="password" />
-    <button @click="submit" :disabled="!(email && password)">Login</button>
-    <div v-if="error" class="error">{{error}}</div>
+    <input
+      id="password"
+      v-model="password"
+      aria-label="password"
+      type="password"
+    />
+    <button :disabled="!(email && password)" type="submit">
+      Login
+    </button>
+    <div v-if="error" class="error">{{ error }}</div>
   </form>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -20,19 +28,19 @@ export default {
       error: ""
     };
   },
+  computed: mapGetters("auth", ["isAuthenticated"]),
   methods: {
     ...mapActions("auth", ["login"]),
     async submit() {
       try {
-        await this.login({
+        const success = await this.login({
           email: this.email,
           password: this.password
         });
+        if (success) this.error = "";
+        else this.error = "Incorrect email/password!";
       } catch (err) {
-        //TODO potentially better display for the user
-        console.log(err);
-        this.error =
-          "ERROR: Something went wrong or email / password incorrect!";
+        this.error = "Internal ERROR: Something went wrong!";
       }
     }
   }
