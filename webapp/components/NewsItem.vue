@@ -7,18 +7,28 @@
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
+import { gql } from "@apollo/client";
 export default {
   props: { news: Object },
   methods: {
-    ...mapActions("post", ["upvote"]),
     async upvote() {
-      this.$emit("update", { ...this.news, votes: (this.news.votes + 1)});
-      await this.upvote({id: this.news.id});
+      const upvoteGql = gql`
+        mutation($id: ID!) {
+          upvote(id: $id) {
+            id
+          }
+        }
+      `;
+      await this.app.apolloProvider.defaultClient.mutate({
+        mutation: upvoteGql,
+        variables: {
+          id: this.news.id,
+        },
+      });
+      this.$emit("update", { ...this.news, votes: this.news.votes + 1 });
     },
     downvote() {
-      this.$emit("update", { ...this.news, votes: (this.news.votes - 1)});
-      this.$emit("update", this.news);
+      this.$emit("update", { ...this.news, votes: this.news.votes - 1 });
     },
     remove() {
       this.$emit("remove", this.news);
@@ -26,3 +36,4 @@ export default {
   },
 };
 </script>
+

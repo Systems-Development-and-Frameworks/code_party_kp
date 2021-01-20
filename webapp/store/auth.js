@@ -6,7 +6,7 @@ export const state = () => ({
   token: null,
   //currently logged in user(id)
   currentUser: null,
-  
+
 });
 export const getters = {
   isAuthenticated: state => {
@@ -49,36 +49,4 @@ export const actions = {
     commit(SET_TOKEN, null);
     commit(SET_USER, null);
   },
-  async upvote({  }, { id }) {
-    const upvoteGql = gql`
-                    mutation($id: ID!) {
-                      upvote(id: $id) {
-                          id
-                      }
-                    }
-                  `;
-    await this.app.apolloProvider.defaultClient.mutate({
-      mutation: upvoteGql,
-      variables:
-      {
-        id
-      }
-    });
-  },
-  async write({  }, { title, id }) {
-    const writeGql = gql`
-                    mutation($post: PostInput!) {
-                    write(post: $post) {
-                        id
-                    }
-                    }
-                `;
-    await this.app.apolloProvider.defaultClient.mutate({
-      mutation: writeGql,
-      variables:
-      {
-        post: { title: title, id: id }
-      }
-    });
-  }
 };

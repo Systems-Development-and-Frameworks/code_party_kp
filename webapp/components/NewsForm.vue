@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { gql } from "@apollo/client";
 export default {
   data() {
     return {
@@ -14,13 +14,23 @@ export default {
     };
   },
   methods: {
-    ...mapActions("auth", ["write"]),
     async click() {
+      const writeGql = gql`
+        mutation($post: PostInput!) {
+          write(post: $post) {
+            id
+          }
+        }
+      `;
+      await this.app.apolloProvider.defaultClient.mutate({
+        mutation: writeGql,
+        variables: {
+          post: { title: this.newTitle},
+        },
+      });
       const item = { title: this.newTitle, votes: 0, id: Date.now() };
-      await this.write({title: item.title, id: item.id});
       this.newTitle = "";
       this.$emit("create", item);
-     
     },
   },
 };
