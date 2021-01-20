@@ -6,7 +6,10 @@
 </template>
 
 <script>
+
+import { gql } from "@apollo/client";
 import {mapGetters} from "vuex";
+
 export default {
   data() {
     return {
@@ -14,7 +17,20 @@ export default {
     };
   },
   methods: {
-    click() {
+    async click() {
+      const writeGql = gql`
+        mutation($post: PostInput!) {
+          write(post: $post) {
+            id
+          }
+        }
+      `;
+      await this.app.apolloProvider.defaultClient.mutate({
+        mutation: writeGql,
+        variables: {
+          post: { title: this.newTitle},
+        },
+      });
       const item = { title: this.newTitle, votes: 0, id: Date.now() };
       this.newTitle = "";
       this.$emit("create", item);

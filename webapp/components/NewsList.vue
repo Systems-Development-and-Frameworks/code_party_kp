@@ -45,6 +45,7 @@ export default {
     remove(newItem) {
       this.news = this.news.filter((x) => newItem.id !== x.id);
     },
+    
     create(newItem) {
       this.news.push(newItem);
     },

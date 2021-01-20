@@ -4,8 +4,10 @@ import jwt_decode from "jwt-decode";
 export const state = () => ({
   //JWT token
   token: null,
+
   //currently logged in user
   currentUser: null
+
 });
 export const getters = {
   isAuthenticated: state => {
@@ -19,7 +21,8 @@ export const mutations = {
   },
   [SET_USER](state, user) {
     state.currentUser = user;
-  }
+  },
+
 };
 
 export const actions = {
@@ -57,5 +60,5 @@ export const actions = {
   logout({ commit }) {
     commit(SET_TOKEN, null);
     commit(SET_USER, null);
-  }
+  },
 };
