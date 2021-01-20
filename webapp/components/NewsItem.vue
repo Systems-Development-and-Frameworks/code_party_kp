@@ -3,14 +3,14 @@
     <h2>{{ news.title }}({{ news.votes }})</h2>
     <button @click="upvote" v-if="isAuthenticated">Upvote</button>
     <button @click="downvote" v-if="isAuthenticated">Downvote</button>
-    <button @click="remove" v-if="isAuthenticated" >Remove</button>
+    <button @click="remove" v-if="isAuthenticated">Remove</button>
+    <!--&& NewsItem.id === currentUser-->
   </div>
 </template>
 <script>
-
 import { gql } from "@apollo/client";
 
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   props: { news: Object },
@@ -39,8 +39,8 @@ export default {
     },
   },
   computed: {
-     ...mapGetters('auth', ['isAuthenticated', 'currentUser'])
-   }
+    ...mapGetters("auth", ["isAuthenticated", "currentUser"]),
+  },
 };
 </script>
 
