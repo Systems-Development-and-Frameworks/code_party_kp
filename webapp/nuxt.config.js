@@ -15,6 +15,15 @@ export default {
   storybook: {
     // Options
   },
+  //@nuxtjs/apollo
+  apollo: {
+    //https://github.com/nuxt-community/apollo-module#2--load-nuxtjsapollo-module
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:4000',
+      }
+    }
+  },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
@@ -33,6 +42,7 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
+    '@nuxtjs/apollo',
   ],
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
