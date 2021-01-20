@@ -7,11 +7,14 @@
   </div>
 </template>
 <script>
+import { mapActions } from "vuex";
 export default {
   props: { news: Object },
   methods: {
-    upvote() {
+    ...mapActions("post", ["upvote"]),
+    async upvote() {
       this.$emit("update", { ...this.news, votes: (this.news.votes + 1)});
+      await this.upvote({id: this.news.id});
     },
     downvote() {
       this.$emit("update", { ...this.news, votes: (this.news.votes - 1)});

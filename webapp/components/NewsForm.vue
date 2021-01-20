@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -13,10 +14,13 @@ export default {
     };
   },
   methods: {
-    click() {
+    ...mapActions("auth", ["write"]),
+    async click() {
       const item = { title: this.newTitle, votes: 0, id: Date.now() };
+      await this.write({title: item.title, id: item.id});
       this.newTitle = "";
       this.$emit("create", item);
+     
     },
   },
 };

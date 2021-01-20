@@ -5,7 +5,8 @@ export const state = () => ({
   //JWT token
   token: null,
   //currently logged in user(id)
-  currentUser: null
+  currentUser: null,
+  
 });
 export const getters = {
   isAuthenticated: state => {
@@ -19,7 +20,8 @@ export const mutations = {
   },
   [SET_USER](state, user) {
     state.currentUser = user;
-  }
+  },
+
 };
 
 export const actions = {
@@ -46,5 +48,37 @@ export const actions = {
   logout({ commit }) {
     commit(SET_TOKEN, null);
     commit(SET_USER, null);
+  },
+  async upvote({ commit }, { id }) {
+    const upvoteGql = gql`
+                    mutation($id: ID!) {
+                      upvote(id: $id) {
+                          id
+                      }
+                    }
+                  `;
+    await this.app.apolloProvider.defaultClient.mutate({
+      mutation: upvoteGql,
+      variables:
+      {
+        id
+      }
+    });
+  },
+  async write({ commit }, { title, id }) {
+    const writeGql = gql`
+                    mutation($post: PostInput!) {
+                    write(post: $post) {
+                        id
+                    }
+                    }
+                `;
+    await this.app.apolloProvider.defaultClient.mutate({
+      mutation: writeGql,
+      variables:
+      {
+        post: { title: title, id: id }
+      }
+    });
   }
 };
