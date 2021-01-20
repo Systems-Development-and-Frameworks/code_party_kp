@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!--TODO menu components for switching goes here-->
+    <NavBar />
     <Nuxt />
   </div>
 </template>
