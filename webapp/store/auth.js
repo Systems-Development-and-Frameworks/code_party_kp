@@ -49,7 +49,7 @@ export const actions = {
     commit(SET_TOKEN, null);
     commit(SET_USER, null);
   },
-  async upvote({ commit }, { id }) {
+  async upvote({  }, { id }) {
     const upvoteGql = gql`
                     mutation($id: ID!) {
                       upvote(id: $id) {
@@ -65,7 +65,7 @@ export const actions = {
       }
     });
   },
-  async write({ commit }, { title, id }) {
+  async write({  }, { title, id }) {
     const writeGql = gql`
                     mutation($post: PostInput!) {
                     write(post: $post) {
