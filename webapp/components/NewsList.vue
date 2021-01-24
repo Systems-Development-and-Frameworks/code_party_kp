@@ -6,28 +6,21 @@
           <NewsItem :news="anews" @update="update" @remove="remove" />
         </li>
       </ul>
-      <div v-if="isEmpty" class="emptyList">
-        The list is empty :(
-      </div>
+      <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
     </div>
     <NewsForm @create="create" />
-    <button @click="reverse" id="reverseButton">
-      Reverse order
-    </button>
+    <button @click="reverse" id="reverseButton">Reverse order</button>
   </div>
 </template>
 
 <script>
 import NewsItem from "./NewsItem";
 import NewsForm from "./NewsForm";
+import { gql } from "@apollo/client";
 export default {
   data() {
     return {
-      news: [
-        { title: "VueJs", votes: 0, id: 1 },
-        { title: "just", votes: 0, id: 2 },
-        { title: "rocks", votes: 0, id: 3 }
-      ],
+      // news: [],
       sortOrder: 1
     };
   },
@@ -56,8 +49,29 @@ export default {
         (a, b) => this.sortOrder * (b.votes - a.votes)
       );
     },
+    news() {
+      return this.posts;
+    },
     isEmpty() {
       return this.news.length == 0;
+    }
+    // GQL and in 'update', 'remove', 'create', 'init' fetch data again or polling?
+  },
+  apollo: {
+    posts: {
+      query: gql`
+        query {
+          posts {
+            id
+            title
+            votes
+            author {
+              id
+            }
+          }
+        }
+      `
+      //,pollInterval: 300 // ms
     }
   }
 };
