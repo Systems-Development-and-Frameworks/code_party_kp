@@ -26,7 +26,7 @@ export default {
           }
         }
       `;
-      await this.app.apolloProvider.defaultClient.mutate({
+      await this.$apollo.mutate({
         mutation: upvoteGql,
         variables: {
           id: this.news.id,
