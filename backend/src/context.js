@@ -7,7 +7,7 @@ export function context({ req }) {
   token = token.replace("Bearer ", "");
   try {
     const decodedJWT = verifyToken(token);
-    return { decodedJWT, driver };
+    return { ...decodedJWT, driver };
   } catch (e) {
     return { driver };
   }
