@@ -3,7 +3,7 @@
     <div>
       <ul>
         <li v-for="anews in newsSorted" :key="anews.id">
-          <NewsItem :news="anews" @update="update" @remove="remove" />
+          <NewsItem :news="anews" @upvote="upvote" />
         </li>
       </ul>
       <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
@@ -20,7 +20,6 @@ import { gql } from "@apollo/client";
 export default {
   data() {
     return {
-      // news: [],
       sortOrder: 1
     };
   },
@@ -32,15 +31,38 @@ export default {
     reverse() {
       this.sortOrder = this.sortOrder * -1;
     },
-    update(newItem) {
-      this.news = this.news.map(x => (x.id == newItem.id ? newItem : x));
-    },
-    remove(newItem) {
-      this.news = this.news.filter(x => newItem.id !== x.id);
+    async upvote(newItem) {
+      const upvoteGql = gql`
+        mutation($id: ID!) {
+          upvote(id: $id) {
+            id
+            votes
+          }
+        }
+      `;
+      await this.$apollo.mutate({
+        mutation: upvoteGql,
+        variables: {
+          id: newItem.id
+        }
+      });
     },
 
-    create(newItem) {
-      this.news.push(newItem);
+    async create(newItem) {
+      const createGql = gql`
+        mutation($post: PostInput!) {
+          write(post: $post) {
+            id
+          }
+        }
+      `;
+
+      await this.$apollo.mutate({
+        mutation: createGql,
+        variables: {
+          post: newItem
+        }
+      });
     }
   },
   computed: {
@@ -50,12 +72,11 @@ export default {
       );
     },
     news() {
-      return this.posts;
+      return this.posts ?? [];
     },
     isEmpty() {
       return this.news.length == 0;
     }
-    // GQL and in 'update', 'remove', 'create', 'init' fetch data again or polling?
   },
   apollo: {
     posts: {
@@ -65,13 +86,16 @@ export default {
             id
             title
             votes
+            voters {
+              id
+            }
             author {
               id
             }
           }
         }
-      `
-      //,pollInterval: 300 // ms
+      `,
+      pollInterval: 300 // ms
     }
   }
 };
