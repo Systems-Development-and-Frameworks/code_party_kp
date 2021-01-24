@@ -4,7 +4,7 @@
     <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">
       Create
     </button>
-    <button @click="update" v-if="isAuthenticated">Change</button>
+    <!--<button @click="update" v-if="isAuthenticated">Change</button>-->
   </form>
 </template>
 
@@ -27,7 +27,7 @@ export default {
           }
         }
       `;
-      await this.app.apolloProvider.defaultClient.mutate({
+      await this.$apollo.mutate({
         mutation: writeGql,
         variables: {
           post: { title: this.newTitle },
