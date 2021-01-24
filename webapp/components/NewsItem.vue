@@ -3,11 +3,10 @@
     <h2>{{ news.title }}({{ news.votes }})</h2>
     <button @click="upvote" v-if="isAuthenticated">Upvote</button>
     <button @click="downvote" v-if="isAuthenticated">Downvote</button>
-    <button
-      @click="remove"
-      v-if="isAuthenticated && news.author.id === currentUser"
-    >
-      Remove
+    <button @click="remove" v-if="isAuthenticated">Remove</button>
+    <button @click="update" v-if="isAuthenticated">
+      <!--&& news?.author?.id === currentUser-->
+      Edit
     </button>
   </div>
 </template>

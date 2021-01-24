@@ -4,7 +4,7 @@
     <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">
       Create
     </button>
-    <!--<button @click="update" v-if="isAuthenticated">Change</button>-->
+    <button @click="update" v-if="isAuthenticated">Edit</button>
   </form>
 </template>
 
