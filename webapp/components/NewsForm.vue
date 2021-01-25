@@ -1,9 +1,7 @@
 <template>
   <form @submit.prevent>
     <input v-model="newTitle" aria-label="title" />
-    <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">
-      Create
-    </button>
+    <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">Create</button>
   </form>
 </template>
 
