@@ -1,4 +1,4 @@
-### Installing and running neo4j with docker
+### Installing and running the backend with neo4j in docker
 
 1. Install docker manually
 
@@ -24,16 +24,22 @@ docker run -p 7474:7474 -p 7687:7687 -d -e NEO4J_AUTH=neo4j/NEO4J neo4j
 
 4. Navigate to `http://localhost:7474/` to verify Neo4j is indeed running
 
-5. Start the application
+5. Seed the database
+```bash
+npm run db:clean
+npm run db:seed
+```
+
+6. Start the application
 
 ```bash
 npm install
 npm run dev
 ```
 
-6. Navigate the browser to `http://localhost:4000/`
+7. Navigate the browser to `http://localhost:4000/`
 
-### Installing and running neo4j locally (alternative)
+###  Installing and running the backend with neo4j installed locally (alternative)
 
 1. Install neo4j by following the [installation guidelines](https://neo4j.com/docs/operations-manual/current/installation/) for your respective OS.
    `macOS` in combination with [homebrew](https://brew.sh/), you can just run
@@ -54,16 +60,22 @@ neo4j start
 
 4. create a environment config file `backend/.env` similar to the one used for testing `backend/.env.test`
 
-5. Start the application
+5. Seed the database
+```bash
+npm run db:clean
+npm run db:seed
+```
+
+6. Start the application
 
 ```bash
 npm install
 npm run dev
 ```
 
-6. Navigate the browser to `http://localhost:4000/`
+7. Navigate the browser to `http://localhost:4000/`
 
-7. Once done, the database can be stopped via
+8. Once done, the database can be stopped via
 
 ```
 neo4j stop
