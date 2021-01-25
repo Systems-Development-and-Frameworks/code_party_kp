@@ -3,7 +3,8 @@
     <h2>{{ news.title }}({{ news.votes }})</h2>
     <button @click="upvote" v-if="isAuthenticated">Upvote</button>
     <button v-if="isAuthenticated">Downvote</button>
-    <button v-if="isAuthenticated">Remove</button>
+    <button v-if="isAuthor">Delete</button>
+    <button v-if="isAuthor">Edit</button>
   </div>
 </template>
 <script>
@@ -17,7 +18,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"])
+    ...mapGetters("auth", ["isAuthenticated", "currentUser"]),
+    isAuthor() {
+      return this.news.author.id === this.currentUser;
+    }
   }
 };
 </script>

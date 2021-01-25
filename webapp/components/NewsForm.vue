@@ -1,13 +1,11 @@
 <template>
   <form @submit.prevent>
     <input v-model="newTitle" aria-label="title" />
-    <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">Create</button>
+    <button @click="click" :disabled="!newTitle">Create</button>
   </form>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   data() {
     return {
@@ -20,9 +18,6 @@ export default {
       this.newTitle = "";
       this.$emit("create", item);
     }
-  },
-  computed: {
-    ...mapGetters("auth", ["isAuthenticated"])
   }
 };
 </script>
