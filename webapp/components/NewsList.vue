@@ -8,8 +8,12 @@
       </ul>
       <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
     </div>
-    <NewsForm @create="create" />
-    <button @click="reverse" id="reverseButton">Reverse order</button>
+    <div>
+      <NewsForm @create="create" v-if="isAuthenticated" />
+    </div>
+    <div>
+      <button @click="reverse" id="reverseButton">Reverse order</button>
+    </div>
   </div>
 </template>
 
@@ -17,6 +21,7 @@
 import NewsItem from "./NewsItem";
 import NewsForm from "./NewsForm";
 import { gql } from "@apollo/client";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -66,6 +71,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
     newsSorted() {
       return [...this.news].sort(
         (a, b) => this.sortOrder * (b.votes - a.votes)
