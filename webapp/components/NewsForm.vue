@@ -4,42 +4,27 @@
     <button @click="click" :disabled="!newTitle" v-if="isAuthenticated">
       Create
     </button>
-    <button @click="update" v-if="isAuthenticated">Edit</button>
   </form>
 </template>
 
 <script>
-import { gql } from "@apollo/client";
 import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      newTitle: "",
+      newTitle: ""
     };
   },
   methods: {
     async click() {
-      const writeGql = gql`
-        mutation($post: PostInput!) {
-          write(post: $post) {
-            id
-          }
-        }
-      `;
-      await this.$apollo.mutate({
-        mutation: writeGql,
-        variables: {
-          post: { title: this.newTitle },
-        },
-      });
-      const item = { title: this.newTitle, votes: 0, id: Date.now() };
+      const item = { title: this.newTitle };
       this.newTitle = "";
       this.$emit("create", item);
-    },
+    }
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"]),
-  },
+    ...mapGetters("auth", ["isAuthenticated"])
+  }
 };
 </script>
