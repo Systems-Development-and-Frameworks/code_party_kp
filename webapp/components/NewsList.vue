@@ -1,6 +1,6 @@
 
 <template>
-  <div id = "content">
+  <div id="content">
     <div class="flex flex-row flex-wrap mx-auto">
       <div
         class="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3"
@@ -8,8 +8,8 @@
         :key="anews.id"
       >
         <NewsItem :news="anews" @upvote="upvote" />
-        <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
       </div>
+      <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
     </div>
     <div>
       <NewsForm @create="create" v-if="isAuthenticated" />
