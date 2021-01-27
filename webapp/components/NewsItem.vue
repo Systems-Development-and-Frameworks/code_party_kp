@@ -24,10 +24,9 @@
       <p
         class="flex flex-row flex-wrap w-full px-4 py-2 overflow-hidden text-sm text-justify text-gray-700"
       >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, magni
-        fugiat, odit incidunt necessitatibus aut nesciunt exercitationem aliquam
-        id voluptatibus quisquam maiores officia sit amet accusantium aliquid
-        quo obcaecati quasi.
+        Aus dem Englischen übersetzt-Nuxt.js ist ein kostenloses Open-Source-Webanwendungsframework, das auf Vue.js,
+         Node.js, Webpack und Babel.js basiert.
+          Das Framework wird als "Meta-Framework für universelle Anwendungen" beworben.
       </p>
       <hr class="border-gray-300" />
        <section class="px-4 py-2 mt-2">

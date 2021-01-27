@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header class="header"/>
     <Nuxt id="app" />
     <Footer class="footer" />
   </div>
