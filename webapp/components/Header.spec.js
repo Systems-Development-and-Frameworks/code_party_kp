@@ -1,12 +1,12 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
 import Vuex from "vuex";
-import NavBar from "./NavBar.vue";
+import Header from "./Header.vue";
 
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 
-describe("NavBar.vue", () => {
+describe("Header.vue", () => {
     let actions;
     let getters;
     let store;
@@ -25,7 +25,7 @@ describe("NavBar.vue", () => {
                 }
             }
         });
-        return shallowMount(NavBar, { store, stubs: { NuxtLink: RouterLinkStub }, localVue });
+        return shallowMount(Header, { store, stubs: { NuxtLink: RouterLinkStub }, localVue });
     };
     beforeEach(() => {
         getters = {
