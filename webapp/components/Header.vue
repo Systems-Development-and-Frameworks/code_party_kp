@@ -1,44 +1,127 @@
 <template>
-<header class="bg-gray-800 pt-10 sm:mt-10 pt-10">
-<nav class="flex items-center justify-between flex-wrap bg-teal p-6">
-  <div class="flex items-center flex-no-shrink text-white mr-6">
-    <span class="font-semibold text-xl tracking-tight">Code-Party-KP</span>
-    <button vclass="block lg:hidden" class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
-      <svg class="h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-    </button>
-  </div>
-  <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-    <div class="text-sm lg:flex-grow">
-      <a href="/" class="block mt-4 text-white lg:inline-block lg:mt-0 tracking-tight hover:text-grey mr-4">
-        Posts
-      </a>
-      </a>
-    </div>
-    <div>
-      <nuxt-link class="inline-block text-sm px-4 py-2 bg-transparent leading-none border rounded text-white border-white hover:border-transparent hover:text-teal hover:bg-grey mt-4 lg:mt-0" to="/login" v-if="!isAuthenticated">Login</nuxt-link>
-      <button class="inline-block text-sm px-4 py-2 bg-transparent leading-none border rounded text-white border-white hover:border-transparent hover:text-teal hover:bg-grey mt-4 lg:mt-0" v-else @click="logout">Logout</button>
-    </div>
-  </div>
-</nav>
-</header>
+  <header class="bg-gray-800 pt-10 sm:mt-10 pt-10">
+    <nav class="">
+      <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+          <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <button
+              @click="isVisible = !isVisible"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              aria-expanded="false"
+            >
+              <svg
+                class="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <svg
+                class="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="absolute inset-y-auto right-0 hidden sm:block sm:ml-6">
+            <template v-if="isAuthenticated">
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="logout"
+              >
+                Logout
+              </button>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/">Posts</nuxt-link>
+              </button>
+            </template>
+            <template v-else>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/login">Login</nuxt-link>
+              </button>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/">Posts</nuxt-link>
+              </button>
+            </template>
+          </div>
+        </div>
+      </div>
+      <transition>
+        <div v-show="isVisible" class="visible md:hidden">
+          <div class="px-2 pt-2 pb-3 space-y-1">
+            <div v-if="isAuthenticated">
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="logout"
+              >
+                Logout
+              </button>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/">Posts</nuxt-link>
+              </button>
+            </div>
+            <div v-else>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/login">Login</nuxt-link>
+              </button>
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                <nuxt-link to="/">Posts</nuxt-link>
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </nav>
+  </header>
 </template>
 
-<script>
 
+
+
+<script>
 import { mapGetters, mapActions } from "vuex";
 export default {
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
   },
-   data() {
+  data() {
     return {
-      isVisible: false
+      isVisible: false,
     };
   },
   methods: {
-    ...mapActions("auth", ["logout"])
-  }
-  
+    ...mapActions("auth", ["logout"]),
+  },
 };
 
 /**
@@ -48,5 +131,4 @@ export default {
   v-show="!isVisible" 
   <div>
  */
-
 </script>
