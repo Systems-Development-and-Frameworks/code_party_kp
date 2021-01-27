@@ -1,6 +1,11 @@
 <template>
   <header class="bg-gray-800 pt-10 sm:mt-10 pt-10">
-    <nav class="">
+    <h3
+      class="text-2xl font-sans:'Helvetica' leading-7 text-gray-400 sm:text-3xl sm:truncate"
+    >
+      Code-Party-KP
+    </h3>
+    <nav>
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -44,25 +49,25 @@
           <div class="absolute inset-y-auto right-0 hidden sm:block sm:ml-6">
             <template v-if="isAuthenticated">
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                 @click="logout"
               >
                 Logout
               </button>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/">Posts</nuxt-link>
               </button>
             </template>
             <template v-else>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/login">Login</nuxt-link>
               </button>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/">Posts</nuxt-link>
               </button>
@@ -75,25 +80,25 @@
           <div class="px-2 pt-2 pb-3 space-y-1">
             <div v-if="isAuthenticated">
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                 @click="logout"
               >
                 Logout
               </button>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/">Posts</nuxt-link>
               </button>
             </div>
             <div v-else>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/login">Login</nuxt-link>
               </button>
               <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
               >
                 <nuxt-link to="/">Posts</nuxt-link>
               </button>
