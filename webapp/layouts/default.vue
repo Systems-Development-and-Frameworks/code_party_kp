@@ -2,6 +2,7 @@
   <div>
     <Header />
     <Nuxt id="app" />
+    <Footer class="footer" />
   </div>
 </template>
 
