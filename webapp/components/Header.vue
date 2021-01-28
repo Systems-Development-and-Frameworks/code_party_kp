@@ -11,7 +11,7 @@
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <button
               @click="isVisible = !isVisible"
-              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              class="inline-flex w-min items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-expanded="false"
             >
               <svg
@@ -47,62 +47,52 @@
           </div>
 
           <div class="absolute inset-y-auto right-0 hidden sm:block sm:ml-6">
-            <template v-if="isAuthenticated">
-              <button
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                @click="logout"
-              >
-                Logout
-              </button>
-              <button
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-              >
-                <nuxt-link to="/">Posts</nuxt-link>
-              </button>
-            </template>
-            <template v-else>
-              <button
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-              >
-                <nuxt-link to="/login">Login</nuxt-link>
-              </button>
-              <button
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-              >
-                <nuxt-link to="/">Posts</nuxt-link>
-              </button>
-            </template>
+            <button
+              class="bg-gray-500 w-min hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              @click="logout"
+              v-if="isAuthenticated"
+            >
+              Logout
+            </button>
+
+            <nuxt-link
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              v-else
+              to="/login"
+              >Login</nuxt-link
+            >
+
+            <nuxt-link
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              to="/"
+              >Posts</nuxt-link
+            >
           </div>
         </div>
       </div>
       <transition>
         <div v-show="isVisible" class="visible md:hidden">
           <div class="px-2 pt-2 pb-3 space-y-1">
-            <div v-if="isAuthenticated">
-              <button
-                class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-                @click="logout"
-              >
-                Logout
-              </button>
-              <button
-                class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-              >
-                <nuxt-link to="/">Posts</nuxt-link>
-              </button>
-            </div>
-            <div v-else>
-              <button
-                class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-              >
-                <nuxt-link to="/login">Login</nuxt-link>
-              </button>
-              <button
-                class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-              >
-                <nuxt-link to="/">Posts</nuxt-link>
-              </button>
-            </div>
+           <button
+              class="bg-gray-500 w-min hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              @click="logout"
+              v-if="isAuthenticated"
+            >
+              Logout
+            </button>
+
+            <nuxt-link
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              v-else
+              to="/login"
+              >Login</nuxt-link
+            >
+
+            <nuxt-link
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+              to="/"
+              >Posts</nuxt-link
+            >
           </div>
         </div>
       </transition>
@@ -129,11 +119,4 @@ export default {
   },
 };
 
-/**
- *   </div>
-  <button @click="isVisible != isVisible">Visibility</button>
-
-  v-show="!isVisible" 
-  <div>
- */
 </script>
