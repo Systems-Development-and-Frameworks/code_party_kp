@@ -1,7 +1,12 @@
 
 <template>
   <div>
-    <h1 class="p-10 text-xl mx-auto md:w-full md:max-w-md info" v-if="isAuthenticated">Successfully logged in!</h1>
+    <h1
+      class="p-10 text-xl mx-auto md:w-full md:max-w-md info"
+      v-if="isAuthenticated"
+    >
+      Successfully logged in!
+    </h1>
     <form
       class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12"
       v-else
@@ -31,7 +36,7 @@
               type="password"
             />
             <button
-              class="transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
+              class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
               :disabled="!(email && password)"
               type="submit"
             >
