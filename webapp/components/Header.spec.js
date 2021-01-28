@@ -43,7 +43,6 @@ describe("Header.vue", () => {
             });
             it("show login button", async () => {
                 const wrapper = setupWrapper();
-                const logoutButton = wrapper.find("button").text();
                 expect(wrapper.html()).not.toContain('Login');
             });
 
