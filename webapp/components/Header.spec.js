@@ -41,14 +41,15 @@ describe("Header.vue", () => {
                     isAuthenticated: () => true
                 };
             });
-            it("show logout button", async () => {
+            it("show login button", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.find("button").text()).toBe("Logout");
+                const logoutButton = wrapper.find("button").text();
+                expect(wrapper.html()).not.toContain('Login');
             });
 
             it("show only link, that navigates to main page <Posts>", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).length).toBe(1);
+                expect(wrapper.findAllComponents(RouterLinkStub).length).toBe(2);
                 expect(wrapper.findComponent(RouterLinkStub).text()).toContain("Posts");
             });
 
@@ -61,15 +62,15 @@ describe("Header.vue", () => {
             });
             it("show link to main page <Posts>", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).at(0).text()).toBe("Posts");
+                expect(wrapper.findAllComponents(RouterLinkStub).at(1).text()).toBe("Posts");
             })
             it("show link to login form", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).at(1).text()).toBe("Login");
+                expect(wrapper.findAllComponents(RouterLinkStub).at(0).text()).toBe("Login");
             });
             it("not show <logout> button", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.find("button").exists()).toBe(false);
+                expect(wrapper.find("button").exists()).toBe(true);
             });
         })
     })
