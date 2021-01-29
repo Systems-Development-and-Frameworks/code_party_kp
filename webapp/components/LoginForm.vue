@@ -2,13 +2,13 @@
 <template>
   <div>
     <h1
-      class="p-10 text-xl mx-auto md:w-full md:max-w-md info"
+      class="p-10 text-xl mx-auto"
       v-if="isAuthenticated"
     >
       Successfully logged in!
     </h1>
     <form
-      class="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12"
+      class="bg-gray-100 flex flex-col justify-center"
       v-else
       @submit.prevent="submit"
     >

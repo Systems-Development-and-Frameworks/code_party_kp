@@ -13,7 +13,7 @@
   >
     <div class="my-auto w-full">
       <img
-        src="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+        src="https://image.flaticon.com/icons/png/512/1106/1106631.png"
         alt="lovely avatar"
         class="h-24 mx-auto w-24 object-fill"
       />

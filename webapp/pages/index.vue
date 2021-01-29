@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>News List</h1>
+   <h1 class="text-gray-800 text-2xl font-semibold uppercase md:text-3xl">Hacker NEWs </h1>
     <NewsList />
   </div>
 </template>
