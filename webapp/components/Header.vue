@@ -73,7 +73,7 @@
       <div v-show="isVisible" class="visible sm:hidden flex justify-end">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:hidden">
           <button
-            class="bg-gray-500 w-min hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
             @click="logout"
             v-if="isAuthenticated"
           >
@@ -81,14 +81,14 @@
           </button>
 
           <nuxt-link
-            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
             v-else
             to="/login"
             >Login</nuxt-link
           >
 
           <nuxt-link
-            class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            class="transition duration-200 bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 focus:shadow-sm focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
             to="/"
             >Posts</nuxt-link
           >
