@@ -3,32 +3,29 @@
     <div>
       <ul>
         <li v-for="anews in newsSorted" :key="anews.id">
-          <NewsItem :news="anews" @update="update" @remove="remove" />
+          <NewsItem :news="anews" @upvote="upvote" />
         </li>
       </ul>
-      <div v-if="isEmpty" class="emptyList">
-        The list is empty :(
-      </div>
+      <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
     </div>
-    <NewsForm :newTitle="newTitle" @create="create"/>
-    <button @click="reverse" id="reverseButton">
-      Reverse order
-    </button>
+    <div>
+      <NewsForm @create="create" v-if="isAuthenticated" />
+    </div>
+    <div>
+      <button @click="reverse" id="reverseButton">Reverse order</button>
+    </div>
   </div>
 </template>
 
 <script>
 import NewsItem from "./NewsItem";
 import NewsForm from "./NewsForm";
+import { gql } from "@apollo/client";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      news: [
-        { title: "VueJs", votes: 0, id: 1 },
-        { title: "just", votes: 0, id: 2 },
-        { title: "rocks", votes: 0, id: 3 },
-      ],
-      sortOrder: 1,
+      sortOrder: 1
     };
   },
   components: {
@@ -39,26 +36,74 @@ export default {
     reverse() {
       this.sortOrder = this.sortOrder * -1;
     },
-    update(newItem) {
-      this.news = this.news.map((x) => (x.id == newItem.id ? newItem : x));
+    async upvote(newItem) {
+      const upvoteGql = gql`
+        mutation($id: ID!) {
+          upvote(id: $id) {
+            id
+            votes
+          }
+        }
+      `;
+      await this.$apollo.mutate({
+        mutation: upvoteGql,
+        variables: {
+          id: newItem.id
+        }
+      });
     },
-    remove(newItem) {
-      this.news = this.news.filter((x) => newItem.id !== x.id);
-    },
-    create(newItem) {
-      this.news.push(newItem);
-    },
+
+    async create(newItem) {
+      const createGql = gql`
+        mutation($post: PostInput!) {
+          write(post: $post) {
+            id
+          }
+        }
+      `;
+
+      await this.$apollo.mutate({
+        mutation: createGql,
+        variables: {
+          post: newItem
+        }
+      });
+    }
   },
   computed: {
+    ...mapGetters("auth", ["isAuthenticated"]),
     newsSorted() {
       return [...this.news].sort(
         (a, b) => this.sortOrder * (b.votes - a.votes)
       );
     },
+    news() {
+      return this.posts ?? [];
+    },
     isEmpty() {
       return this.news.length == 0;
-    },
+    }
   },
+  apollo: {
+    posts: {
+      query: gql`
+        query {
+          posts {
+            id
+            title
+            votes
+            voters {
+              id
+            }
+            author {
+              id
+            }
+          }
+        }
+      `,
+      pollInterval: 300 // ms
+    }
+  }
 };
 </script>
 

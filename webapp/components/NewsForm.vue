@@ -9,15 +9,15 @@
 export default {
   data() {
     return {
-      newTitle: "",
+      newTitle: ""
     };
   },
   methods: {
-    click() {
-      const item = { title: this.newTitle, votes: 0, id: Date.now() };
+    async click() {
+      const item = { title: this.newTitle };
       this.newTitle = "";
       this.$emit("create", item);
-    },
-  },
+    }
+  }
 };
 </script>

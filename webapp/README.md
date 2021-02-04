@@ -1,5 +1,3 @@
-# webapp
-
 ## Build Setup
 
 ```bash
@@ -18,3 +16,7 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+## Registered users
+
+See [here](/backend/src/db/fixture.js)
