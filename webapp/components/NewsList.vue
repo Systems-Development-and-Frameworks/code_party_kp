@@ -1,11 +1,14 @@
+
 <template>
-  <div class="newslist_container">
-    <div>
-      <ul>
-        <li v-for="anews in newsSorted" :key="anews.id">
-          <NewsItem :news="anews" @upvote="upvote" />
-        </li>
-      </ul>
+  <div id="content">
+    <div class="flex flex-row flex-wrap mx-auto">
+      <div
+        class="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3"
+        v-for="anews in newsSorted"
+        :key="anews.id"
+      >
+        <NewsItem :news="anews" @upvote="upvote" />
+      </div>
       <div v-if="isEmpty" class="emptyList">The list is empty :(</div>
     </div>
     <div>
@@ -17,6 +20,9 @@
   </div>
 </template>
 
+
+
+
 <script>
 import NewsItem from "./NewsItem";
 import NewsForm from "./NewsForm";
@@ -25,12 +31,12 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      sortOrder: 1
+      sortOrder: 1,
     };
   },
   components: {
     NewsItem,
-    NewsForm
+    NewsForm,
   },
   methods: {
     reverse() {
@@ -48,8 +54,8 @@ export default {
       await this.$apollo.mutate({
         mutation: upvoteGql,
         variables: {
-          id: newItem.id
-        }
+          id: newItem.id,
+        },
       });
     },
 
@@ -65,10 +71,10 @@ export default {
       await this.$apollo.mutate({
         mutation: createGql,
         variables: {
-          post: newItem
-        }
+          post: newItem,
+        },
       });
-    }
+    },
   },
   computed: {
     ...mapGetters("auth", ["isAuthenticated"]),
@@ -82,7 +88,7 @@ export default {
     },
     isEmpty() {
       return this.news.length == 0;
-    }
+    },
   },
   apollo: {
     posts: {
@@ -101,14 +107,9 @@ export default {
           }
         }
       `,
-      pollInterval: 300 // ms
-    }
-  }
+      pollInterval: 300, // ms
+    },
+  },
 };
 </script>
 
-<style>
-ul {
-  list-style-type: none;
-}
-</style>

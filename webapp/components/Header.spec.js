@@ -1,12 +1,12 @@
 import { shallowMount, createLocalVue, RouterLinkStub } from "@vue/test-utils";
 import Vuex from "vuex";
-import NavBar from "./NavBar.vue";
+import Header from "./Header.vue";
 
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 
-describe("NavBar.vue", () => {
+describe("Header.vue", () => {
     let actions;
     let getters;
     let store;
@@ -25,7 +25,7 @@ describe("NavBar.vue", () => {
                 }
             }
         });
-        return shallowMount(NavBar, { store, stubs: { NuxtLink: RouterLinkStub }, localVue });
+        return shallowMount(Header, { store, stubs: { NuxtLink: RouterLinkStub }, localVue });
     };
     beforeEach(() => {
         getters = {
@@ -41,14 +41,14 @@ describe("NavBar.vue", () => {
                     isAuthenticated: () => true
                 };
             });
-            it("show logout button", async () => {
+            it("show login button", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.find("button").text()).toBe("Logout");
+                expect(wrapper.html()).not.toContain('Login');
             });
 
             it("show only link, that navigates to main page <Posts>", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).length).toBe(1);
+                expect(wrapper.findAllComponents(RouterLinkStub).length).toBe(2);
                 expect(wrapper.findComponent(RouterLinkStub).text()).toContain("Posts");
             });
 
@@ -61,15 +61,15 @@ describe("NavBar.vue", () => {
             });
             it("show link to main page <Posts>", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).at(0).text()).toBe("Posts");
+                expect(wrapper.findAllComponents(RouterLinkStub).at(1).text()).toBe("Posts");
             })
             it("show link to login form", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.findAllComponents(RouterLinkStub).at(1).text()).toBe("Login");
+                expect(wrapper.findAllComponents(RouterLinkStub).at(0).text()).toBe("Login");
             });
             it("not show <logout> button", async () => {
                 const wrapper = setupWrapper();
-                expect(wrapper.find("button").exists()).toBe(false);
+                expect(wrapper.find("button").exists()).toBe(true);
             });
         })
     })

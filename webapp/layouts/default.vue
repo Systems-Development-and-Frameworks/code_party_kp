@@ -1,7 +1,8 @@
 <template>
   <div>
-    <NavBar />
+    <Header class="header"/>
     <Nuxt id="app" />
+    <Footer class="footer" />
   </div>
 </template>
 
